@@ -10,7 +10,7 @@ class OATabBar extends React.Component {
           <div className="oa-tab-item-icon">
             <OAIcon type={require("./assets/icon_home.svg")} />
           </div>
-          <div className="oa-tab-item-label"> OA学院</div>
+          <div className="oa-tab-item-label"> 新生学院</div>
         </NavLink>
         <NavLink to="/profile" className="oa-tab-item">
           <div className="oa-tab-item-icon">

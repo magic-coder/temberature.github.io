@@ -13,11 +13,11 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
     // var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    // this.state = {
-    //   dataSource: ds.cloneWithRows([]),
-    //   type: 0,
-    //   isLoading: false
-    // };
+    this.state = {
+      dataSource: [],
+      type: 0,
+      isLoading: false
+    };
   }
   componentDidMount() {
     document.title = "新生学院";
@@ -28,13 +28,11 @@ class Home extends React.Component {
       // var ds = new ListView.DataSource({
       //   rowHasChanged: (r1, r2) => r1 !== r2
       // });
-      // this.setState({
-      //   dataSource: ds.cloneWithRows(
-      //     response.data.sort((a, b) => {
-      //       return a.course_id < b.course_id;
-      //     })
-      //   )
-      // });
+      this.setState({
+        dataSource: response.data.sort((a, b) => {
+          return a.event_end_date < b.event_end_date;
+        })
+      });
     });
   }
   row(course) {
@@ -125,7 +123,8 @@ class Home extends React.Component {
   filter = type => {
     this.setState({
       type,
-      loading: true
+      isLoading: true,
+      dataSource: []
     });
     type = ["", "哲学", "艺术", "历史", "文学", "科技"][type];
     axios
@@ -136,36 +135,49 @@ class Home extends React.Component {
       })
       .then(response => {
         this.setState({ isLoading: false });
-        // var ds = new ListView.DataSource({
-        //   rowHasChanged: (r1, r2) => r1 !== r2
-        // });
-        // this.setState({
-        //   dataSource: ds.cloneWithRows(
-        //     response.data.sort((a, b) => {
-        //       return a.course_id < b.course_id;
-        //     })
-        //   )
-        // });
+        this.setState({
+          dataSource: response.data.sort((a, b) => {
+            return a.event_end_date < b.event_end_date;
+          })
+        });
       });
   };
-  separator = (sectionID, rowID) => (
-    <div
-      key={`${sectionID}-${rowID}`}
-      style={{
-        backgroundColor: "#E5E5E5",
-        width: 335,
-        height: 1,
-        margin: "0 auto",
-        border: 0
-      }}
-    />
-  );
+  separator = () => {
+    return (
+      <div
+        style={{
+          backgroundColor: "#E5E5E5",
+          width: 335,
+          height: 1,
+          margin: "0 auto",
+          border: 0
+        }}
+      />
+    );
+  };
   footer = () => {
     return (
       <div style={{ padding: 20, textAlign: "center" }}>
         {this.state.isLoading ? "加载中..." : "你来到了宇宙的边界"}
       </div>
     );
+  };
+  loadMore = () => {
+
+    // this.setState({ isLoading: true });
+    return axios.get("/RetrieveEventServlet").then(response => {
+      return;
+      this.setState({ isLoading: false });
+      this.setState(prev => {
+        return {
+          dataSource: prev.dataSource.concat(
+            response.data.sort((a, b) => {
+              return a.event_end_date < b.event_end_date;
+            })
+          )
+        };
+      });
+    });
   };
   render() {
     return (
@@ -182,12 +194,13 @@ class Home extends React.Component {
           ))}
         </Carousel>
         <ListView
-          // dataSource={this.state.dataSource}
+          dataSource={this.state.dataSource}
           renderRow={course => this.row(course)}
           renderHeader={() => this.header()}
-          renderSeparator={this.separator}
+          renderSeparator={() => this.separator()}
           renderFooter={() => this.footer()}
           useBodyScroll
+          loadMore={this.loadMore}
         />
       </div>
     );
