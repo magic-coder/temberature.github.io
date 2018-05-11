@@ -11,15 +11,14 @@ class ListView extends React.Component {
     this.handleScroll();
   }
   handleScroll = () => {
-    var locked = false,
-      batch = this.state.items.length;
+    var locked = false;
     document.addEventListener("scroll", () => {
-      console.log(this.refs);
+      // console.log(this.refs);
       if (locked) {
         return;
       }
       var hit = this.hitBottomTest(ReactDOM.findDOMNode(this.refs.container));
-      console.log(hit);
+      // console.log(hit);
       if (hit) {
         locked = true;
         this.props.loadMore().then(() => {
@@ -39,8 +38,6 @@ class ListView extends React.Component {
   };
   hitBottomTest(elem) {
     var screenHeight = window.innerHeight;
-    var scrollTop = document.scrollTop;
-    // return elementBottom - screenHeight - scrollTop >= 0;
     return elem && elem.getBoundingClientRect().bottom <= screenHeight;
   }
   render() {

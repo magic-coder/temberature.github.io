@@ -167,16 +167,16 @@ class Home extends React.Component {
     // this.setState({ isLoading: true });
     return axios.get("/RetrieveEventServlet").then(response => {
       return;
-      this.setState({ isLoading: false });
-      this.setState(prev => {
-        return {
-          dataSource: prev.dataSource.concat(
-            response.data.sort((a, b) => {
-              return a.event_end_date < b.event_end_date;
-            })
-          )
-        };
-      });
+      // this.setState({ isLoading: false });
+      // this.setState(prev => {
+      //   return {
+      //     dataSource: prev.dataSource.concat(
+      //       response.data.sort((a, b) => {
+      //         return a.event_end_date < b.event_end_date;
+      //       })
+      //     )
+      //   };
+      // });
     });
   };
   render() {
