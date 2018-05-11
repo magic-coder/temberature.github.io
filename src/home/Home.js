@@ -1,6 +1,7 @@
 /* eslint no-dupe-keys: 0, no-mixed-operators: 0 */
 import React from "react";
-import { ListView, Carousel } from "antd-mobile";
+import { Carousel } from "antd-mobile";
+import ListView from "../components/listview/ListView";
 import axios from "../utils/customAxios";
 import "./Home.less";
 import { Link } from "react-router-dom";
@@ -11,29 +12,29 @@ import classNames from "classnames/bind";
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    this.state = {
-      dataSource: ds.cloneWithRows([]),
-      type: 0,
-      isLoading: false
-    };
+    // var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+    // this.state = {
+    //   dataSource: ds.cloneWithRows([]),
+    //   type: 0,
+    //   isLoading: false
+    // };
   }
   componentDidMount() {
-    document.title = "OA学院";
+    document.title = "新生学院";
 
     this.setState({ isLoading: true });
     axios.get("/RetrieveEventServlet").then(response => {
       this.setState({ isLoading: false });
-      var ds = new ListView.DataSource({
-        rowHasChanged: (r1, r2) => r1 !== r2
-      });
-      this.setState({
-        dataSource: ds.cloneWithRows(
-          response.data.sort((a, b) => {
-            return a.course_id < b.course_id;
-          })
-        )
-      });
+      // var ds = new ListView.DataSource({
+      //   rowHasChanged: (r1, r2) => r1 !== r2
+      // });
+      // this.setState({
+      //   dataSource: ds.cloneWithRows(
+      //     response.data.sort((a, b) => {
+      //       return a.course_id < b.course_id;
+      //     })
+      //   )
+      // });
     });
   }
   row(course) {
@@ -135,16 +136,16 @@ class Home extends React.Component {
       })
       .then(response => {
         this.setState({ isLoading: false });
-        var ds = new ListView.DataSource({
-          rowHasChanged: (r1, r2) => r1 !== r2
-        });
-        this.setState({
-          dataSource: ds.cloneWithRows(
-            response.data.sort((a, b) => {
-              return a.course_id < b.course_id;
-            })
-          )
-        });
+        // var ds = new ListView.DataSource({
+        //   rowHasChanged: (r1, r2) => r1 !== r2
+        // });
+        // this.setState({
+        //   dataSource: ds.cloneWithRows(
+        //     response.data.sort((a, b) => {
+        //       return a.course_id < b.course_id;
+        //     })
+        //   )
+        // });
       });
   };
   separator = (sectionID, rowID) => (
@@ -181,7 +182,7 @@ class Home extends React.Component {
           ))}
         </Carousel>
         <ListView
-          dataSource={this.state.dataSource}
+          // dataSource={this.state.dataSource}
           renderRow={course => this.row(course)}
           renderHeader={() => this.header()}
           renderSeparator={this.separator}
