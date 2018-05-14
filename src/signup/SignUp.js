@@ -6,6 +6,7 @@ import "./SignUp.less";
 import axios from "../utils/customAxios";
 import jsSHA from "jssha";
 import WebConstants from "../web_constants";
+import VeriCode from '../components/vericode/vericode';
 
 class SignIn extends React.Component {
   state = {
@@ -157,7 +158,7 @@ class SignIn extends React.Component {
             onErrorClick={this.onErrorClick.bind(this, "Please enter 6 digits")}
             onChange={this.onCodeChange}
             value={this.state.code}
-            extra={<Button onClick={this.sendCode}>获取验证码</Button>}
+            extra={<VeriCode onClick={this.sendCode} />}
           />
           <InputItem
             type="password"
