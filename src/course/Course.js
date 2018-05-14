@@ -1,7 +1,7 @@
 import React from "react";
 import Moment from "moment";
 import axios from "../utils/customAxios";
-import { Button, List } from "antd-mobile";
+import { Button, List, Badge, WhiteSpace, Tabs } from "antd-mobile";
 import OAIcon from "../components/icon/Icon.js";
 import Period from "../components/period/Period";
 import "./Course.less";
@@ -81,107 +81,151 @@ export default class Course extends React.Component {
   };
   render() {
     const course = this.state.course;
+    const tabs = [
+      { title: "活动详情" },
+      { title: <Badge>共享空间</Badge> }
+    ];
 
     return (
       <div key={course.id} id="course">
-        <div className="coverContainer">
+        <Tabs
+          tabs={tabs}
+          initialPage={0}
+          onChange={(tab, index) => {
+            console.log("onChange", index, tab);
+          }}
+          onTabClick={(tab, index) => {
+            console.log("onTabClick", index, tab);
+          }}
+        >
           <div
             style={{
-              backgroundImage:
-                "url(https://www.jieshu.mobi:8181" +
-                course.event_frontcover_filepath +
-                ")"
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: 'column',
+              backgroundColor: "#fff"
             }}
-            className="blurCover"
-          />
-          <img
-            className="cover"
-            src={
-              "https://www.jieshu.mobi:8181" + course.event_frontcover_filepath
-            }
-            alt=""
-          />
-        </div>
+          >
+            <div className="coverContainer">
+              <div
+                style={{
+                  backgroundImage:
+                    "url(https://www.jieshu.mobi:8181" +
+                    course.event_frontcover_filepath +
+                    ")"
+                }}
+                className="blurCover"
+              />
+              <img
+                className="cover"
+                src={
+                  "https://www.jieshu.mobi:8181" +
+                  course.event_frontcover_filepath
+                }
+                alt=""
+              />
+            </div>
 
-        <div className="info">
-          <div className="title">
-            <span className="name">{course.title}</span>
+            <div className="info">
+              <div className="title">
+                <span className="name">{course.title}</span>
+              </div>
+              <div className="deadline">
+                报名截止至：{Moment(course.event_start_date).format(
+                  "YYYY/MM/DD"
+                )}
+                <Period
+                  course={course}
+                  images={[
+                    require("./assets/period_enrolling.png"),
+                    require("./assets/period_ongoing.png"),
+                    require("./assets/period_finish.png")
+                  ]}
+                />
+              </div>
+              <List>
+                <Item
+                  extra={
+                    "已报" +
+                    course.enrolled_already +
+                    "人/限制" +
+                    course.max_attendence +
+                    "人"
+                  }
+                >
+                  报名人数
+                </Item>
+                <Item
+                  extra={
+                    Moment(course.startDate).format("YYYY/MM/DD") +
+                    " ~ " +
+                    Moment(course.endDate).format("YYYY/MM/DD")
+                  }
+                  wrap
+                >
+                  活动时间
+                </Item>
+                <Item
+                  extra={
+                    <div>
+                      <OAIcon
+                        size="xxs"
+                        style={{ color: "#9b9b9b" }}
+                        type={require("../assets/icon_place.svg")}
+                      />
+                      {course.address}
+                    </div>
+                  }
+                  arrow="horizontal"
+                >
+                  活动地点
+                </Item>
+                <Item extra="免费">费用</Item>
+              </List>
+              <div
+                className="detail"
+                dangerouslySetInnerHTML={{
+                  __html: course.event_main_content
+                    ? this.generateNewLine(course.event_main_content)
+                    : "活动详情"
+                }}
+              />
+            </div>
+
+            {new Date().getTime() < course.event_register_deadline &&
+              (this.state.already_joined_event ? (
+                <Button
+                  disabled
+                  className="enrollBtn"
+                  type="primary"
+                  size="large"
+                >
+                  已报名
+                </Button>
+              ) : (
+                <Button
+                  className="enrollBtn"
+                  type="primary"
+                  size="large"
+                  onClick={this.toEntry}
+                >
+                  立即报名
+                </Button>
+              ))}
           </div>
-          <div className="deadline">
-            报名截止至：{Moment(course.event_start_date).format("YYYY/MM/DD")}
-            <Period
-              course={course}
-              images={[
-                require("./assets/period_enrolling.png"),
-                require("./assets/period_ongoing.png"),
-                require("./assets/period_finish.png")
-              ]}
-            />
-          </div>
-          <List>
-            <Item
-              extra={
-                "已报" +
-                course.enrolled_already +
-                "人/限制" +
-                course.max_attendence +
-                "人"
-              }
-            >
-              报名人数
-            </Item>
-            <Item
-              extra={
-                Moment(course.startDate).format("YYYY/MM/DD") +
-                " ~ " +
-                Moment(course.endDate).format("YYYY/MM/DD")
-              }
-              wrap
-            >
-              活动时间
-            </Item>
-            <Item
-              extra={
-                <div>
-                  <OAIcon
-                    size="xxs"
-                    style={{ color: "#9b9b9b" }}
-                    type={require("../assets/icon_place.svg")}
-                  />
-                  {course.address}
-                </div>
-              }
-              arrow="horizontal"
-            >
-              活动地点
-            </Item>
-            <Item extra="免费">费用</Item>
-          </List>
           <div
-            className="detail"
-            dangerouslySetInnerHTML={{
-              __html: course.event_main_content
-                ? this.generateNewLine(course.event_main_content)
-                : "活动详情"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#fff",
+              height: '300px'
             }}
-          />
-        </div>
-
-        {new Date().getTime() < course.event_register_deadline &&
-          (this.state.already_joined_event ? (
-            <Button disabled className="enrollBtn" type="primary" size="large">
-              已报名
-            </Button>
-          ) : (
-            <Button
-              className="enrollBtn"
-              type="primary"
-              size="large"
-              onClick={this.toEntry}
-            >
-              立即报名
-            </Button>
-          ))}
+          >
+            敬请期待
+          </div>
+        </Tabs>
+        <WhiteSpace />
       </div>
     );
   }
