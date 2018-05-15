@@ -6,7 +6,6 @@ import OAIcon from "../components/icon/Icon.js";
 import Period from "../components/period/Period";
 import "./Course.less";
 import WebConstants from "../web_constants";
-import { Map, Marker } from "react-amap";
 import { Link } from "react-router-dom";
 
 const Item = List.Item;
