@@ -14,6 +14,7 @@ import About from "./about/About";
 import Invitation from "./invitation/Invitation";
 import Settings from "./settings/Settings";
 import ScrollToTop from "./components/ScrollToTop";
+import OAMap from './map/Map';
 
 class App extends React.Component {
   render() {
@@ -25,6 +26,7 @@ class App extends React.Component {
             <Route path="/profile" component={Profile} />
             <Route exact path="/course/:id" component={Course} />
             <Route exact path="/course/:id/entryForm" component={EntryForm} />
+            <Route exact path="/course/:id/map" component={OAMap} />
             <Route exact path="/" component={TabBar} />
             <Route path="/profile" component={TabBar} />
             <Route path="/signin" component={SignIn} />

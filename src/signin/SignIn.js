@@ -97,6 +97,7 @@ class SignIn extends React.Component {
             onErrorClick={this.onErrorClick}
             onChange={this.onChange}
             value={this.state.user_mobilephone_number}
+            clear
           />
           <InputItem
             type="password"

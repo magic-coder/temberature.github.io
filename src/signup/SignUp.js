@@ -6,9 +6,10 @@ import "./SignUp.less";
 import axios from "../utils/customAxios";
 import jsSHA from "jssha";
 import WebConstants from "../web_constants";
-import VeriCode from '../components/vericode/vericode';
+import VeriCode from "../components/vericode/vericode";
+import classNames from "classnames/bind";
 
-class SignIn extends React.Component {
+class SignUp extends React.Component {
   state = {
     user_mobilephone_number: "15910707069",
     code: 123456,
@@ -81,7 +82,7 @@ class SignIn extends React.Component {
     });
   };
   onPasswordChange = password => {
-    if (password.replace(/\s/g, "").length < 11) {
+    if (password.replace(/\s/g, "").length < 6) {
       this.setState({
         hasPasswordError: true
       });
@@ -131,7 +132,7 @@ class SignIn extends React.Component {
         } else {
           this.setState({
             modal: true,
-            modalTip: '请重试'
+            modalTip: "请重试"
           });
         }
       });
@@ -150,6 +151,7 @@ class SignIn extends React.Component {
             )}
             onChange={this.onChange}
             value={this.state.user_mobilephone_number}
+            clear
           />
           <InputItem
             type="number"
@@ -172,7 +174,13 @@ class SignIn extends React.Component {
         <Button
           onClick={this.signup}
           type="primary"
-          className="signupBtn"
+          className={classNames({
+            signupBtn: true,
+            invalid:
+              this.state.hasPhoneError ||
+              this.state.hasCodeError ||
+              this.state.hasPasswordError
+          })}
           size="large"
         >
           注册
@@ -207,4 +215,4 @@ class SignIn extends React.Component {
   }
 }
 
-export default createForm()(SignIn);
+export default createForm()(SignUp);

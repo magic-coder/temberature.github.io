@@ -6,6 +6,8 @@ import OAIcon from "../components/icon/Icon.js";
 import Period from "../components/period/Period";
 import "./Course.less";
 import WebConstants from "../web_constants";
+import { Map, Marker } from "react-amap";
+import { Link } from "react-router-dom";
 
 const Item = List.Item;
 
@@ -81,10 +83,7 @@ export default class Course extends React.Component {
   };
   render() {
     const course = this.state.course;
-    const tabs = [
-      { title: "活动详情" },
-      { title: <Badge>共享空间</Badge> }
-    ];
+    const tabs = [{ title: "活动详情" }, { title: <Badge>共享空间</Badge> }];
 
     return (
       <div key={course.id} id="course">
@@ -102,7 +101,7 @@ export default class Course extends React.Component {
             style={{
               display: "flex",
               justifyContent: "center",
-              flexDirection: 'column',
+              flexDirection: "column",
               backgroundColor: "#fff"
             }}
           >
@@ -167,14 +166,16 @@ export default class Course extends React.Component {
                 </Item>
                 <Item
                   extra={
-                    <div>
-                      <OAIcon
-                        size="xxs"
-                        style={{ color: "#9b9b9b" }}
-                        type={require("../assets/icon_place.svg")}
-                      />
-                      {course.address}
-                    </div>
+                    <Link to={this.props.match.url + "/map"}>
+                      <div>
+                        <OAIcon
+                          size="xxs"
+                          style={{ color: "#9b9b9b" }}
+                          type={require("../assets/icon_place.svg")}
+                        />
+                        {course.address}
+                      </div>
+                    </Link>
                   }
                   arrow="horizontal"
                 >
@@ -219,7 +220,7 @@ export default class Course extends React.Component {
               alignItems: "center",
               justifyContent: "center",
               backgroundColor: "#fff",
-              height: '300px'
+              height: "300px"
             }}
           >
             敬请期待
