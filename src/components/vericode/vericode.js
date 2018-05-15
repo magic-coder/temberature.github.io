@@ -8,18 +8,17 @@ class VeriCode extends React.Component {
     this.state = {
       remain: 0
     };
-  }
-  onClick = () => {
-    this.props.onClick();
-    this.setState({
-      remain: 5
-    });
-    var that = this;
-    new Timer({
+    let that = this;
+    this.timer = new Timer({
       hours: 0,
       min: 0,
       seconds: 5,
       remainFormat: 'hh:mm:ss',
+      onStart: function() {
+        that.setState({
+          remain: this.remain
+        });
+      },
       onTick: function() {
         that.setState({
           remain: this.remain
@@ -33,6 +32,10 @@ class VeriCode extends React.Component {
         })
       }
     });
+  }
+  onClick = () => {
+    this.timer.start();
+    this.props.onClick();
   }
   render() {
     return (

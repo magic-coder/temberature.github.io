@@ -1,21 +1,24 @@
+import dateFormat from 'dateformat';
+
 class Timer {
   constructor(options) {
     this.options = options;
     this.miliseconds =
       (60 * 60 * options.hours + 60 * options.min + options.seconds) * 1000;
-    this.startTime = Date.now();
-    this.remain = this.miliseconds;
-    this.start();
+
   }
   start = () => {
-    this.intervalID = setInterval(this.tick.bind(this), 1000);
+    this.startTime = Date.now();
+    this.intervalID = setInterval(this.tick.bind(this), 900);
+    this.remain = dateFormat(this.miliseconds, 's');
+    this.options.onStart.bind(this)();
   };
   tick = () => {
     let elapsed = Date.now() - this.startTime;
 
     let remain = this.miliseconds - elapsed;
-    if (remain > 0) {
-      this.remain = remain;
+    if (remain > 1000) {
+      this.remain = dateFormat(remain, 's') ;
       this.options.onTick.bind(this)();
     } else {
       this.options.onFinish();
