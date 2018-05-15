@@ -19,7 +19,8 @@ class VeriCode extends React.Component {
       hours: 0,
       min: 0,
       seconds: 5,
-      onSecond: function() {
+      remainFormat: 'hh:mm:ss',
+      onTick: function() {
         that.setState({
           remain: this.remain
         });

@@ -1,36 +1,27 @@
 class Timer {
   constructor(options) {
     this.options = options;
-    this.miliseconds = (60 * 60 * options.hours + 60 * options.min + options.seconds) * 1000;
+    this.miliseconds =
+      (60 * 60 * options.hours + 60 * options.min + options.seconds) * 1000;
     this.startTime = Date.now();
-    this.count = 0;
-    this.remain = this.seconds * 1000;
+    this.remain = this.miliseconds;
     this.start();
   }
   start = () => {
-    this.intervalID = setInterval(this.tick.bind(this), 100);
-  }
+    this.intervalID = setInterval(this.tick.bind(this), 1000);
+  };
   tick = () => {
     let elapsed = Date.now() - this.startTime;
 
-    let remain = this.seconds * 1000 - elapsed;
-    if (this.remain - remain > 1000) {
+    let remain = this.miliseconds - elapsed;
+    if (remain > 0) {
       this.remain = remain;
-      this.onSecond();
+      this.options.onTick.bind(this)();
     } else {
       this.options.onFinish();
       clearInterval(this.intervalID);
     }
-
-    if (this.remain <= 0) {
-
-    }
-  }
-  onSecond () {
-  }
-  onFinish () {
-
-  }
+  };
 }
 
 export default Timer;
