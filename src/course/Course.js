@@ -96,6 +96,7 @@ export default class Course extends React.Component {
           onTabClick={(tab, index) => {
             console.log("onTabClick", index, tab);
           }}
+          swipeable={false}
         >
           <div
             style={{
