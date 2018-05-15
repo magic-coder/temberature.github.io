@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "antd-mobile";
 import Timer from "../../utils/Timer";
+import classNames from "classnames/bind";
 
 class VeriCode extends React.Component {
   constructor() {
@@ -13,7 +14,7 @@ class VeriCode extends React.Component {
       hours: 0,
       min: 0,
       seconds: 5,
-      remainFormat: 'hh:mm:ss',
+      format: 's',
       onStart: function() {
         that.setState({
           remain: this.remain
@@ -39,7 +40,7 @@ class VeriCode extends React.Component {
   }
   render() {
     return (
-      <Button onClick={this.onClick}>
+      <Button onClick={this.onClick} className={classNames({ locked: this.state.remain !== 0 })}>
         {this.state.remain === 0 ? "获取验证码" : this.state.remain + '秒后重新发送'}
       </Button>
     );
