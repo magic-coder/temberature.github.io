@@ -1,7 +1,16 @@
 import React from "react";
 import Moment from "moment";
 import axios from "../utils/customAxios";
-import { Button, List, Badge, WhiteSpace, Tabs } from "antd-mobile";
+import {
+  Button,
+  List,
+  Badge,
+  WhiteSpace,
+  Tabs,
+  Accordion,
+  PickerView
+} from "antd-mobile";
+import BottomPickerView from "../components/bottomPickerView/bottomPickerView";
 import OAIcon from "../components/icon/Icon.js";
 import Period from "../components/period/Period";
 import "./Course.less";
@@ -15,9 +24,12 @@ export default class Course extends React.Component {
     super(props);
     this.state = {
       course: {},
-      already_joined_event: false
+      already_joined_event: false,
+      currentTab: 1,
+      pickerVisible: false
     };
   }
+
   componentDidMount() {
     document.title = "OA学院";
 
@@ -80,30 +92,51 @@ export default class Course extends React.Component {
       this.props.history.push(this.props.match.url + "/entryForm");
     }
   };
+  toShare = () => {
+    this.setState({
+      pickerVisible: true
+    });
+  };
   render() {
     const course = this.state.course;
     const tabs = [{ title: "活动详情" }, { title: <Badge>共享空间</Badge> }];
 
+    const lessons = [
+      {
+        value: "第一课 古希腊绘画艺术",
+        label: "第一课 古希腊绘画艺术"
+      },
+      {
+        value: "第二课 罗马绘画及马赛克艺术",
+        label: "第二课 罗马绘画及马赛克艺术"
+      }
+    ];
     return (
       <div key={course.id} id="course">
         <Tabs
           tabs={tabs}
-          initialPage={0}
+          initialPage={this.state.currentTab}
           onChange={(tab, index) => {
             console.log("onChange", index, tab);
+            this.setState({
+              currentTab: index
+            });
           }}
           onTabClick={(tab, index) => {
             console.log("onTabClick", index, tab);
           }}
           swipeable={false}
+          ref={this.setTabsRef}
         >
           <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              flexDirection: "column",
-              backgroundColor: "#fff"
-            }}
+            style={
+              {
+                // display: "flex",
+                // justifyContent: "center",
+                // flexDirection: "column",
+                // backgroundColor: "#fff"
+              }
+            }
           >
             <div className="coverContainer">
               <div
@@ -192,41 +225,77 @@ export default class Course extends React.Component {
                 }}
               />
             </div>
-
-            {new Date().getTime() < course.event_register_deadline &&
-              (this.state.already_joined_event ? (
-                <Button
-                  disabled
-                  className="enrollBtn"
-                  type="primary"
-                  size="large"
-                >
-                  已报名
-                </Button>
-              ) : (
-                <Button
-                  className="enrollBtn"
-                  type="primary"
-                  size="large"
-                  onClick={this.toEntry}
-                >
-                  立即报名
-                </Button>
-              ))}
           </div>
           <div
             style={{
               display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
               backgroundColor: "#fff",
               height: "300px"
             }}
           >
-            敬请期待
+            <Accordion
+              defaultActiveKey="0"
+              className="my-accordion"
+              onChange={this.onChange}
+              style={{ width: "100%", marginTop: 10 }}
+            >
+              <Accordion.Panel header="第一课-史前">
+                <List className="my-list">
+                  <List.Item>加德纳艺术史.pdf</List.Item>
+                  <List.Item>古希腊古罗马艺术史课上讨论录音.ppt</List.Item>
+                </List>
+              </Accordion.Panel>
+              <Accordion.Panel header="第二课-古希腊" className="pad">
+                <List.Item>加德纳艺术史.doc</List.Item>
+                <List.Item>加德纳艺术史.jpg</List.Item>
+              </Accordion.Panel>
+            </Accordion>
           </div>
         </Tabs>
         <WhiteSpace />
+        {this.state.currentTab === 0 &&
+          new Date().getTime() < course.event_register_deadline &&
+          (this.state.already_joined_event ? (
+            <Button disabled className="enrollBtn" type="primary" size="large">
+              已报名
+            </Button>
+          ) : (
+            <Button
+              className="enrollBtn"
+              type="primary"
+              size="large"
+              onClick={this.toEntry}
+            >
+              立即报名
+            </Button>
+          ))}
+        {this.state.currentTab === 1 && (
+          <Button
+            className="enrollBtn"
+            type="primary"
+            size="large"
+            onClick={this.toShare}
+          >
+            我要共享
+          </Button>
+        )}
+        <BottomPickerView
+          data={lessons}
+          title="选择所属课程"
+          value={["第一课 古希腊绘画艺术"]}
+          onOk={e => {
+            this.setState({
+              pickerVisible: false
+            });
+            console.log(e);
+          }}
+          onDismiss={() =>
+            this.setState({
+              pickerVisible: false
+            })
+          }
+          visible={this.state.pickerVisible}
+        />
       </div>
     );
   }
