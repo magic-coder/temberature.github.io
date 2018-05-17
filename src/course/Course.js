@@ -8,7 +8,7 @@ import {
   WhiteSpace,
   Tabs,
   Accordion,
-  PickerView
+  ActionSheet
 } from "antd-mobile";
 import BottomPickerView from "../components/bottomPickerView/bottomPickerView";
 import OAIcon from "../components/icon/Icon.js";
@@ -18,7 +18,13 @@ import WebConstants from "../web_constants";
 import { Link } from "react-router-dom";
 
 const Item = List.Item;
-
+function uploads() {
+  sendCommand("open");
+}
+function sendCommand(cmd) {
+  var url = "gallery:" + cmd;
+  document.location = url;
+}
 export default class Course extends React.Component {
   constructor(props) {
     super(props);
@@ -96,6 +102,23 @@ export default class Course extends React.Component {
     this.setState({
       pickerVisible: true
     });
+  };
+  showActionSheet = (type, BUTTONS) => {
+    ActionSheet.showActionSheetWithOptions(
+      {
+        options: BUTTONS,
+        cancelButtonIndex: BUTTONS.length - 1,
+        maskClosable: true,
+        "data-seed": "logId"
+      },
+      buttonIndex => {
+        uploads();
+        console.log(type, BUTTONS);
+        if (buttonIndex !== BUTTONS.length - 1) {
+          this.setState({ [type]: BUTTONS[buttonIndex] });
+        }
+      }
+    );
   };
   render() {
     const course = this.state.course;
@@ -253,6 +276,7 @@ export default class Course extends React.Component {
           </div>
         </Tabs>
         <WhiteSpace />
+
         {this.state.currentTab === 0 &&
           new Date().getTime() < course.event_register_deadline &&
           (this.state.already_joined_event ? (
@@ -287,7 +311,7 @@ export default class Course extends React.Component {
             this.setState({
               pickerVisible: false
             });
-            console.log(e);
+            document.getElementById("uploader").click();
           }}
           onDismiss={() =>
             this.setState({
@@ -296,6 +320,8 @@ export default class Course extends React.Component {
           }
           visible={this.state.pickerVisible}
         />
+
+        <input id="uploader" type="file" style={{ width: 0, height: 0, display: 'none' }} />
       </div>
     );
   }
