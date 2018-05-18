@@ -134,7 +134,7 @@ class EntryForm extends React.Component {
                 性别
               </Item>
               <DatePicker
-              mode="date"
+                mode="date"
                 value={this.state.date}
                 onChange={date => this.setState({ date })}
               >

@@ -17,12 +17,24 @@ import ScrollToTop from "./components/ScrollToTop";
 import OAMap from './map/Map';
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      type: 0
+    }
+    this.onChange = this.onChange.bind(this);
+  }
+  onChange(type) {
+    this.setState({
+      type: type
+    });
+  }
   render() {
     return (
       <Router>
         <ScrollToTop>
           <div>
-            <Route exact path="/" component={Home} />
+            <Route exact path="/" render={()=><Home type={this.state.type} onChange={this.onChange}></Home>} />
             <Route path="/profile" component={Profile} />
             <Route exact path="/course/:id" component={Course} />
             <Route exact path="/course/:id/entryForm" component={EntryForm} />

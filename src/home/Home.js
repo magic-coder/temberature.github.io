@@ -18,10 +18,11 @@ class Home extends React.Component {
       type: 0,
       isLoading: false
     };
+    this.filter = this.filter.bind(this);
   }
-  componentDidMount() {
+  componentWillMount() {
     document.title = "新生学院";
-    this.filter(0);
+    this.filter(this.props.type);
   }
   row(course) {
     return (
@@ -108,12 +109,13 @@ class Home extends React.Component {
       </header>
     );
   }
-  filter = type => {
+  filter(type) {
     this.setState({
       type,
       isLoading: true,
       dataSource: []
     });
+    this.props.onChange(type);
     type = ["", "哲学", "艺术", "历史", "文学", "科技"][type];
     axios
       .get("/RetrieveEventServlet", {
@@ -128,6 +130,7 @@ class Home extends React.Component {
             return a.event_end_date < b.event_end_date;
           })
         });
+
       });
   };
   separator = () => {
