@@ -1,9 +1,6 @@
 import React from "react";
-import { PickerView, Modal } from "antd-mobile";
 import RMCPopupCascader from "rmc-cascader/lib/Popup";
 import RMCCascader from "rmc-cascader/lib/Cascader";
-import RMCMultiPicker from "rmc-picker/lib/MultiPicker";
-import RMCPicker from "rmc-picker/lib/Picker";
 import "./bottomPickerView.less";
 import "rmc-picker/assets/index.css";
 import "rmc-cascader/assets/index.css";

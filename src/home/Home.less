@@ -1,6 +1,3 @@
-.am-list-view-scrollview {
-  position: initial !important;
-}
 #home {
   background: #fff;
   .slider-decorator-0 {
@@ -28,10 +25,16 @@
   }
   }
   .am-list-view-scrollview {
+    position: relative !important;
+    min-height: 667px;
     padding-bottom: 120/2px;
     .am-list-header {
+      position: absolute;
+      top: 0;
       padding: 28/2px 0 24/2px 21px;
       line-height: 1;
+      background: #fff;
+      z-index: 999;
       overflow-y: hidden;
       .tabs {
         white-space: nowrap;
@@ -63,6 +66,7 @@
       }
     }
     .list-view-section-body {
+      padding-top: 80/2px;
       margin: 0;
       padding-left: 0;
       .course {

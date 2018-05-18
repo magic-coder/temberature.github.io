@@ -16,13 +16,19 @@ class Home extends React.Component {
     this.state = {
       dataSource: [],
       type: 0,
-      isLoading: false
+      isLoading: false,
+      fixedTop: 0,
+      fixed: false
     };
     this.filter = this.filter.bind(this);
   }
   componentWillMount() {
     document.title = "新生学院";
     this.filter(this.props.type);
+  }
+  componentDidUpdate() {
+
+
   }
   row(course) {
     return (
@@ -110,10 +116,13 @@ class Home extends React.Component {
     );
   }
   filter(type) {
+    if (this.state.fixed) {
+      document.body.scrollTop = this.state.fixedTop
+    }
     this.setState({
       type,
       isLoading: true,
-      dataSource: []
+      dataSource: [],
     });
     this.props.onChange(type);
     type = ["", "哲学", "艺术", "历史", "文学", "科技"][type];
@@ -128,7 +137,8 @@ class Home extends React.Component {
           isLoading: false,
           dataSource: response.data.sort((a, b) => {
             return a.event_end_date < b.event_end_date;
-          })
+          }),
+
         });
 
       });
@@ -169,10 +179,15 @@ class Home extends React.Component {
       // });
     });
   };
+  onFix = (fixed) => {
+    this.setState({
+      fixed: fixed
+    })
+  }
   render() {
     return (
       <div id="home">
-        <Carousel autoplay={false} infinite selectedIndex={0}>
+        <Carousel autoplay={false} infinite selectedIndex={0} style={{height: 136}}>
           {["banner1.png", "banner2.jpg", "banner3.jpg"].map(val => (
             <a key={val} href="/">
               <img
@@ -191,6 +206,14 @@ class Home extends React.Component {
           renderFooter={() => this.footer()}
           useBodyScroll
           loadMore={this.loadMore}
+          onFix={this.onFix}
+          fixed={this.state.fixed}
+          onInit={(fixedTop) => {
+            console.log(fixedTop);
+            this.setState({
+              fixedTop: fixedTop
+            })
+          }}
         />
       </div>
     );
