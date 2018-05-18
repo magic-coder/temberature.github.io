@@ -7,8 +7,7 @@ import {
   Badge,
   WhiteSpace,
   Tabs,
-  Accordion,
-  ActionSheet
+  Accordion
 } from "antd-mobile";
 import BottomPickerView from "../components/bottomPickerView/bottomPickerView";
 import OAIcon from "../components/icon/Icon.js";
