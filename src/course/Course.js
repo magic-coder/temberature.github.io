@@ -18,13 +18,7 @@ import WebConstants from "../web_constants";
 import { Link } from "react-router-dom";
 
 const Item = List.Item;
-function uploads() {
-  sendCommand("open");
-}
-function sendCommand(cmd) {
-  var url = "gallery:" + cmd;
-  document.location = url;
-}
+
 export default class Course extends React.Component {
   constructor(props) {
     super(props);
@@ -102,23 +96,6 @@ export default class Course extends React.Component {
     this.setState({
       pickerVisible: true
     });
-  };
-  showActionSheet = (type, BUTTONS) => {
-    ActionSheet.showActionSheetWithOptions(
-      {
-        options: BUTTONS,
-        cancelButtonIndex: BUTTONS.length - 1,
-        maskClosable: true,
-        "data-seed": "logId"
-      },
-      buttonIndex => {
-        uploads();
-        console.log(type, BUTTONS);
-        if (buttonIndex !== BUTTONS.length - 1) {
-          this.setState({ [type]: BUTTONS[buttonIndex] });
-        }
-      }
-    );
   };
   render() {
     const course = this.state.course;

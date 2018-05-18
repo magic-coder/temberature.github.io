@@ -21,19 +21,7 @@ class Home extends React.Component {
   }
   componentDidMount() {
     document.title = "新生学院";
-
-    this.setState({ isLoading: true });
-    axios.get("/RetrieveEventServlet").then(response => {
-      this.setState({ isLoading: false });
-      // var ds = new ListView.DataSource({
-      //   rowHasChanged: (r1, r2) => r1 !== r2
-      // });
-      this.setState({
-        dataSource: response.data.sort((a, b) => {
-          return a.event_end_date < b.event_end_date;
-        })
-      });
-    });
+    this.filter(0);
   }
   row(course) {
     return (
@@ -134,8 +122,8 @@ class Home extends React.Component {
         }
       })
       .then(response => {
-        this.setState({ isLoading: false });
         this.setState({
+          isLoading: false,
           dataSource: response.data.sort((a, b) => {
             return a.event_end_date < b.event_end_date;
           })
@@ -163,7 +151,6 @@ class Home extends React.Component {
     );
   };
   loadMore = () => {
-
     // this.setState({ isLoading: true });
     return axios.get("/RetrieveEventServlet").then(response => {
       return;
