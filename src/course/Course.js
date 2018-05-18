@@ -24,7 +24,7 @@ export default class Course extends React.Component {
     this.state = {
       course: {},
       already_joined_event: false,
-      currentTab: 1,
+      currentTab: 0,
       pickerVisible: false
     };
   }
