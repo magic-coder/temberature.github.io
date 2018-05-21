@@ -66,7 +66,6 @@ class App extends React.Component {
               render={(props) => (
                 <Course
                   {...props}
-                  currentCourse={this.state.currentCourse}
                   currentTab={this.state.tabMap.get(this.state.currentCourse)||0}
                   onTabChange={this.onTabChange}
                   onCourseInit={this.onCourseInit}

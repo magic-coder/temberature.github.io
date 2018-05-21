@@ -16,6 +16,7 @@ import Period from "../components/period/Period";
 import "./Course.less";
 import WebConstants from "../web_constants";
 import { Link } from "react-router-dom";
+import { Map, is, fromJS } from "immutable";
 
 const Item = List.Item;
 const alert = Modal.alert;
@@ -24,8 +25,8 @@ export default class Course extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      course: {},
-      space: {},
+      course: Map(),
+      space: Map(),
       already_joined_event: false,
       pickerVisible: false
     };
@@ -36,8 +37,33 @@ export default class Course extends React.Component {
     this.props.onCourseInit(+this.props.match.params.id);
     this.getData();
   }
+  shouldComponentUpdate(nextProps, nextState) {
+    const thisProps = this.props || {};
+    const thisState = this.state || {};
+    nextState = nextState || {};
+    nextProps = nextProps || {};
+
+    if (
+      Object.keys(thisProps).length !== Object.keys(nextProps).length ||
+      Object.keys(thisState).length !== Object.keys(nextState).length
+    ) {
+      return true;
+    }
+
+    for (const key in nextProps) {
+      if (!is(thisProps[key], nextProps[key])) {
+        return true;
+      }
+    }
+
+    for (const key in nextState) {
+      if (!is(thisState[key], nextState[key])) {
+        return true;
+      }
+    }
+    return false;
+  }
   componentDidUpdate(prevProps) {
-    console.log('update', this.props.currentTab, prevProps.currentTab);
     if (this.props.currentTab !== prevProps.currentTab) {
       this.getData();
     }
@@ -53,7 +79,6 @@ export default class Course extends React.Component {
     }
 
     if (!sessionStorage.getItem(WebConstants.TOKEN)) {
-      console.log(111);
       return;
     }
   }
@@ -69,7 +94,7 @@ export default class Course extends React.Component {
         console.log(response);
         document.title = response.data.title;
         this.setState(() => ({
-          course: response.data
+          course: fromJS(response.data)
         }));
       })
       .catch(function(error) {
@@ -111,7 +136,7 @@ export default class Course extends React.Component {
         console.log(response);
         document.title = response.data.title;
         this.setState(() => ({
-          space: response.data
+          space: fromJS(response.data)
         }));
       })
       .catch(function(error) {
@@ -147,6 +172,7 @@ export default class Course extends React.Component {
   }
 
   render() {
+    console.log("render");
     const course = this.state.course;
     const tabs = [{ title: "活动详情" }, { title: <Badge>共享空间</Badge> }];
 
@@ -162,24 +188,19 @@ export default class Course extends React.Component {
           tabs={tabs}
           initialPage={currentTab}
           onChange={(tab, index) => {
-            console.log("onChange", index, tab);
-
             this.props.onTabChange(courseID, index);
-          }}
-          onTabClick={(tab, index) => {
-            console.log("onTabClick", index, tab);
           }}
           swipeable={false}
         >
           <div>
-            {this.state.course.title && (
+            {course.get("title") && (
               <div>
                 <div className="coverContainer">
                   <div
                     style={{
                       backgroundImage:
                         "url(https://www.jieshu.mobi:8181" +
-                        course.event_frontcover_filepath +
+                        course.get("event_frontcover_filepath") +
                         ")"
                     }}
                     className="blurCover"
@@ -188,7 +209,7 @@ export default class Course extends React.Component {
                     className="cover"
                     src={
                       "https://www.jieshu.mobi:8181" +
-                      course.event_frontcover_filepath
+                      course.get("event_frontcover_filepath")
                     }
                     alt=""
                   />
@@ -196,10 +217,10 @@ export default class Course extends React.Component {
 
                 <div className="info">
                   <div className="title">
-                    <span className="name">{course.title}</span>
+                    <span className="name">{course.get("title")}</span>
                   </div>
                   <div className="deadline">
-                    报名截止至：{Moment(course.event_start_date).format(
+                    报名截止至：{Moment(course.get("event_start_date")).format(
                       "YYYY/MM/DD"
                     )}
                     <Period
@@ -215,9 +236,9 @@ export default class Course extends React.Component {
                     <Item
                       extra={
                         "已报" +
-                        course.enrolled_already +
+                        course.get("enrolled_already") +
                         "人/限制" +
-                        course.max_attendence +
+                        course.get("max_attendence") +
                         "人"
                       }
                     >
@@ -225,9 +246,9 @@ export default class Course extends React.Component {
                     </Item>
                     <Item
                       extra={
-                        Moment(course.startDate).format("YYYY/MM/DD") +
+                        Moment(course.get("startDate")).format("YYYY/MM/DD") +
                         " ~ " +
-                        Moment(course.endDate).format("YYYY/MM/DD")
+                        Moment(course.get("endDate")).format("YYYY/MM/DD")
                       }
                       wrap
                     >
@@ -242,7 +263,7 @@ export default class Course extends React.Component {
                               style={{ color: "#9b9b9b" }}
                               type={require("../assets/icon_place.svg")}
                             />
-                            {course.address}
+                            {course.get("address")}
                           </div>
                         </Link>
                       }
@@ -255,8 +276,8 @@ export default class Course extends React.Component {
                   <div
                     className="detail"
                     dangerouslySetInnerHTML={{
-                      __html: course.event_main_content
-                        ? this.generateNewLine(course.event_main_content)
+                      __html: course.get["event_main_content"]
+                        ? this.generateNewLine(course.get["event_main_content"])
                         : "活动详情"
                     }}
                   />
