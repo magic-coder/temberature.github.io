@@ -21,10 +21,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       type: 0,
-      tabMap: new Map([
-        [1, 0]
-      ]),
-      currentCourse: 0,
+      tabMap: new Map([[1, 1]]),
+      currentCourse: 0
     };
     this.onChange = this.onChange.bind(this);
     this.onTabChange = this.onTabChange.bind(this);
@@ -44,8 +42,8 @@ class App extends React.Component {
   }
   onCourseInit(id) {
     this.setState({
-      currentCourse: id,
-    })
+      currentCourse: id
+    });
   }
   render() {
     return (
@@ -63,10 +61,12 @@ class App extends React.Component {
             <Route
               exact
               path="/course/:id"
-              render={(props) => (
+              render={props => (
                 <Course
                   {...props}
-                  currentTab={this.state.tabMap.get(this.state.currentCourse)||0}
+                  currentTab={
+                    this.state.tabMap.get(this.state.currentCourse) || 0
+                  }
                   onTabChange={this.onTabChange}
                   onCourseInit={this.onCourseInit}
                 />

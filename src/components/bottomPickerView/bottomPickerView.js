@@ -41,8 +41,8 @@ class BottomPickerView extends React.Component {
         onDismiss={this.onDismiss}
         onOk={this.onOk}
         visible={this.props.visible}
-        dismissText={'取消'}
-        okText={'确认'}
+        dismissText={"取消"}
+        okText={"确认"}
         cols={1}
         {...this.props}
       />

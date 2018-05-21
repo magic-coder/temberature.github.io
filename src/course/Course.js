@@ -94,7 +94,7 @@ export default class Course extends React.Component {
         console.log(response);
         document.title = response.data.title;
         this.setState(() => ({
-          course: response.data,
+          course: response.data
         }));
       })
       .catch(function(error) {
@@ -136,7 +136,7 @@ export default class Course extends React.Component {
         console.log(response);
         document.title = response.data.title;
         this.setState(() => ({
-          space: response.data,
+          space: response.data
         }));
       })
       .catch(function(error) {
@@ -176,10 +176,13 @@ export default class Course extends React.Component {
     const course = this.state.course;
     const tabs = [{ title: "活动详情" }, { title: <Badge>共享空间</Badge> }];
 
-    const lessons = (this.state.space.lessons || []).map(lesson => ({
-      value: lesson.name,
-      label: lesson.name
-    }));
+    let lessons = [];
+    (this.state.space.get("lessons") || []).forEach(lesson => {
+      lessons.push({
+        value: lesson.get("name"),
+        label: lesson.get("name")
+      });
+    });
     const courseID = +this.props.match.params.id;
     const currentTab = this.props.currentTab;
     return (
@@ -187,6 +190,7 @@ export default class Course extends React.Component {
         <Tabs
           tabs={tabs}
           initialPage={currentTab}
+          page={currentTab}
           onChange={(tab, index) => {
             this.props.onTabChange(courseID, index);
           }}
@@ -299,16 +303,19 @@ export default class Course extends React.Component {
               onChange={this.onChange}
               style={{ width: "100%", marginTop: 10 }}
             >
-              {this.state.space.get('lessons') &&
-                this.state.space.get('lessons').map(lesson => (
-                  <Accordion.Panel key={lesson.get('name')} header={lesson.get('name')}>
+              {this.state.space.get("lessons") &&
+                this.state.space.get("lessons").map(lesson => (
+                  <Accordion.Panel
+                    key={lesson.get("name")}
+                    header={lesson.get("name")}
+                  >
                     <List className="my-list">
-                      {lesson.get('files').map(file => (
+                      {lesson.get("files").map(file => (
                         <List.Item
-                          key={file.get('name')}
-                          onClick={this.preview.bind(this, 12, file.get('url'))}
+                          key={file.get("name")}
+                          onClick={this.preview.bind(this, 12, file.get("url"))}
                         >
-                          {file.get('name')}
+                          {file.get("name")}
                         </List.Item>
                       ))}
                     </List>

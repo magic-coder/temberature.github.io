@@ -8,13 +8,13 @@ import { Link } from "react-router-dom";
 import Moment from "moment";
 import Period from "../components/period/Period";
 import classNames from "classnames/bind";
+import { List, is } from "immutable";
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    // var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
-      dataSource: [],
+      dataSource: List(),
       type: 0,
       isLoading: false,
       fixedTop: 0,
@@ -26,34 +26,62 @@ class Home extends React.Component {
     document.title = "新生学院";
     this.filter(this.props.type);
   }
+  shouldComponentUpdate(nextProps, nextState) {
+    const thisProps = this.props || {};
+    const thisState = this.state || {};
+    nextState = nextState || {};
+    nextProps = nextProps || {};
+
+    if (
+      Object.keys(thisProps).length !== Object.keys(nextProps).length ||
+      Object.keys(thisState).length !== Object.keys(nextState).length
+    ) {
+      return true;
+    }
+
+    for (const key in nextProps) {
+      if (!is(thisProps[key], nextProps[key])) {
+        return true;
+      }
+    }
+
+    for (const key in nextState) {
+      if (!is(thisState[key], nextState[key])) {
+        return true;
+      }
+    }
+    return false;
+  }
   row(course) {
     return (
       <Link
-        to={"/course/" + course.get('course_id')}
-        key={course.get('course_id')}
+        to={"/course/" + course.get("course_id")}
+        key={course.get("course_id")}
         className="course"
       >
         <img
           className="cover"
           src={
-            "https://www.jieshu.mobi:8181" + course.get('event_frontcover_filepath')
+            "https://www.jieshu.mobi:8181" +
+            course.get("event_frontcover_filepath")
           }
           alt=""
         />
         <div className="info">
-          <div className="name">{course.get('title')}</div>
+          <div className="name">{course.get("title")}</div>
           <div className="time">
             <label htmlFor="">时间：</label>
-            {Moment(course.get('event_start_date')).format("YYYY/MM/DD")} ～{" "}
-            {Moment(course.get('event_end_date')).format("YYYY/MM/DD")}
+            {Moment(course.get("event_start_date")).format(
+              "YYYY/MM/DD"
+            )} ～ {Moment(course.get("event_end_date")).format("YYYY/MM/DD")}
           </div>
           <div className="address">
             <label htmlFor="">地点：</label>
-            {course.get('address')}
+            {course.get("address")}
           </div>
           <div className="quota">
             <label htmlFor="">人数：</label>
-            限{course.get('max_attendence')}人
+            限{course.get("max_attendence")}人
           </div>
           <div className="period">
             <Period
@@ -118,7 +146,7 @@ class Home extends React.Component {
     this.setState({
       type,
       isLoading: true,
-      dataSource: [],
+      dataSource: []
     });
     this.props.onChange(type);
     type = ["", "哲学", "艺术", "历史", "文学", "科技"][type];
@@ -133,12 +161,10 @@ class Home extends React.Component {
           isLoading: false,
           dataSource: response.data.sort((a, b) => {
             return a.event_end_date < b.event_end_date;
-          }),
-
+          })
         });
-
       });
-  };
+  }
   separator = () => {
     return (
       <div
@@ -175,16 +201,21 @@ class Home extends React.Component {
       // });
     });
   };
-  onFix = (fixed) => {
+  onFix = fixed => {
     this.setState({
       fixed: fixed
-    })
-  }
+    });
+  };
   render() {
-    console.log('render');
+    // console.log("render");
     return (
       <div id="home">
-        <Carousel autoplay={false} infinite selectedIndex={0} style={{height: 136}}>
+        <Carousel
+          autoplay={false}
+          infinite
+          selectedIndex={0}
+          style={{ height: 136 }}
+        >
           {["banner1.png", "banner2.jpg", "banner3.jpg"].map(val => (
             <a key={val} href="/">
               <img
@@ -205,11 +236,11 @@ class Home extends React.Component {
           loadMore={this.loadMore}
           onFix={this.onFix}
           fixed={this.state.fixed}
-          onInit={(fixedTop) => {
+          onInit={fixedTop => {
             console.log(fixedTop);
             this.setState({
               fixedTop: fixedTop
-            })
+            });
           }}
         />
       </div>
