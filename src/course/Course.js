@@ -7,8 +7,7 @@ import {
   Badge,
   WhiteSpace,
   Tabs,
-  Accordion,
-  ActionSheet
+  Accordion
 } from "antd-mobile";
 import BottomPickerView from "../components/bottomPickerView/bottomPickerView";
 import OAIcon from "../components/icon/Icon.js";
@@ -25,7 +24,7 @@ export default class Course extends React.Component {
     this.state = {
       course: {},
       already_joined_event: false,
-      currentTab: 1,
+      currentTab: 0,
       pickerVisible: false
     };
   }
