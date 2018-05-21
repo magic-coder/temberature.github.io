@@ -16,7 +16,7 @@ import Period from "../components/period/Period";
 import "./Course.less";
 import WebConstants from "../web_constants";
 import { Link } from "react-router-dom";
-import { Map, is, fromJS } from "immutable";
+import { Map, is } from "immutable";
 
 const Item = List.Item;
 const alert = Modal.alert;
@@ -94,7 +94,7 @@ export default class Course extends React.Component {
         console.log(response);
         document.title = response.data.title;
         this.setState(() => ({
-          course: fromJS(response.data)
+          course: response.data,
         }));
       })
       .catch(function(error) {
@@ -136,7 +136,7 @@ export default class Course extends React.Component {
         console.log(response);
         document.title = response.data.title;
         this.setState(() => ({
-          space: fromJS(response.data)
+          space: response.data,
         }));
       })
       .catch(function(error) {
