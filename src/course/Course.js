@@ -1,14 +1,7 @@
 import React from "react";
 import Moment from "moment";
 import axios from "../utils/customAxios";
-import {
-  Button,
-  List,
-  Badge,
-  WhiteSpace,
-  Tabs,
-  Accordion
-} from "antd-mobile";
+import { Button, List, Badge, WhiteSpace, Tabs, Accordion } from "antd-mobile";
 import BottomPickerView from "../components/bottomPickerView/bottomPickerView";
 import OAIcon from "../components/icon/Icon.js";
 import Period from "../components/period/Period";
@@ -30,7 +23,7 @@ export default class Course extends React.Component {
   }
 
   componentDidMount() {
-    document.title = "OA学院";
+    document.title = "课程主页";
 
     axios
       .get("/RetrieveEventByEventIdServlet", {
@@ -41,7 +34,7 @@ export default class Course extends React.Component {
       })
       .then(response => {
         console.log(response);
-
+        document.title = response.data.title;
         this.setState(() => ({
           course: response.data
         }));
@@ -110,11 +103,12 @@ export default class Course extends React.Component {
         label: "第二课 罗马绘画及马赛克艺术"
       }
     ];
+    const currentTab = this.props.tabMap.get(course.id);
     return (
       <div key={course.id} id="course">
         <Tabs
           tabs={tabs}
-          initialPage={this.props.tabMap.get(course.id)}
+          initialPage={currentTab}
           onChange={(tab, index) => {
             console.log("onChange", index, tab);
             this.props.onTabChange(course.id, index);
@@ -251,7 +245,7 @@ export default class Course extends React.Component {
         </Tabs>
         <WhiteSpace />
 
-        {this.state.currentTab === 0 &&
+        {currentTab === 0 &&
           new Date().getTime() < course.event_register_deadline &&
           (this.state.already_joined_event ? (
             <Button disabled className="enrollBtn" type="primary" size="large">
@@ -267,7 +261,7 @@ export default class Course extends React.Component {
               立即报名
             </Button>
           ))}
-        {this.state.currentTab === 1 && (
+        {currentTab === 1 && (
           <Button
             className="enrollBtn"
             type="primary"
@@ -295,7 +289,11 @@ export default class Course extends React.Component {
           visible={this.state.pickerVisible}
         />
 
-        <input id="uploader" type="file" style={{ width: 0, height: 0, display: 'none' }} />
+        <input
+          id="uploader"
+          type="file"
+          style={{ width: 0, height: 0, display: "none" }}
+        />
       </div>
     );
   }
