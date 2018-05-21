@@ -117,7 +117,7 @@ class Home extends React.Component {
   }
   filter(type) {
     if (this.state.fixed) {
-      document.body.scrollTop = this.state.fixedTop
+      window.scrollTo(0, this.state.fixedTop);
     }
     this.setState({
       type,
