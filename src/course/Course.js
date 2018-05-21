@@ -299,16 +299,16 @@ export default class Course extends React.Component {
               onChange={this.onChange}
               style={{ width: "100%", marginTop: 10 }}
             >
-              {this.state.space.lessons &&
-                this.state.space.lessons.map(lesson => (
-                  <Accordion.Panel key={lesson.name} header={lesson.name}>
+              {this.state.space.get('lessons') &&
+                this.state.space.get('lessons').map(lesson => (
+                  <Accordion.Panel key={lesson.get('name')} header={lesson.get('name')}>
                     <List className="my-list">
-                      {lesson.files.map(file => (
+                      {lesson.get('files').map(file => (
                         <List.Item
-                          key={file.name}
-                          onClick={this.preview.bind(this, 12, file.url)}
+                          key={file.get('name')}
+                          onClick={this.preview.bind(this, 12, file.get('url'))}
                         >
-                          {file.name}
+                          {file.get('name')}
                         </List.Item>
                       ))}
                     </List>
