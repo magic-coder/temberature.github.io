@@ -22,11 +22,13 @@ class App extends React.Component {
     this.state = {
       type: 0,
       tabMap: new Map([
-        [1, 1]
-      ])
+        [1, 0]
+      ]),
+      currentCourse: 0,
     };
     this.onChange = this.onChange.bind(this);
     this.onTabChange = this.onTabChange.bind(this);
+    this.onCourseInit = this.onCourseInit.bind(this);
   }
   onChange(type) {
     this.setState({
@@ -39,6 +41,11 @@ class App extends React.Component {
         tabMap: prevState.tabMap.set(courseID, currentTab)
       });
     });
+  }
+  onCourseInit(id) {
+    this.setState({
+      currentCourse: id,
+    })
   }
   render() {
     return (
@@ -59,8 +66,10 @@ class App extends React.Component {
               render={(props) => (
                 <Course
                   {...props}
-                  tabMap={this.state.tabMap}
+                  currentCourse={this.state.currentCourse}
+                  currentTab={this.state.tabMap.get(this.state.currentCourse)||0}
                   onTabChange={this.onTabChange}
+                  onCourseInit={this.onCourseInit}
                 />
               )}
             />

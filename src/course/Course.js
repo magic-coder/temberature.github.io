@@ -27,20 +27,24 @@ export default class Course extends React.Component {
       course: {},
       space: {},
       already_joined_event: false,
-      currentTab: 0,
       pickerVisible: false
     };
   }
 
   componentDidMount() {
     document.title = "课程主页";
+    this.props.onCourseInit(+this.props.match.params.id);
     this.getData();
   }
-  componentWillReceiveProps() {
-    this.getData();
+  componentDidUpdate(prevProps) {
+    console.log('update', this.props.currentTab, prevProps.currentTab);
+    if (this.props.currentTab !== prevProps.currentTab) {
+      this.getData();
+    }
+    return true;
   }
   getData() {
-    const currentTab = this.props.tabMap.get(+this.props.match.params.id);
+    const currentTab = this.props.currentTab;
 
     if (currentTab === 0) {
       this.getCourse();
@@ -71,29 +75,29 @@ export default class Course extends React.Component {
       .catch(function(error) {
         console.log(error);
       });
-    axios
-      .get("/RetrieveEventParticipantsServlet", {
-        params: {
-          event_id: this.props.match.params.id,
-          [WebConstants.TOKEN]: sessionStorage.getItem(WebConstants.TOKEN)
-        },
-        validateStatus: function(status) {
-          return +status === 200;
-        }
-      })
-      .then(response => {
-        console.log(response);
-        if (response.data.already_joined_event) {
-          this.setState(() => ({
-            already_joined_event: true
-          }));
-        }
-      })
-      .catch(function(error) {
-        if (!error.response) {
-          sessionStorage.removeItem(WebConstants.TOKEN);
-        }
-      });
+    // axios
+    //   .get("/RetrieveEventParticipantsServlet", {
+    //     params: {
+    //       event_id: this.props.match.params.id,
+    //       [WebConstants.TOKEN]: sessionStorage.getItem(WebConstants.TOKEN)
+    //     },
+    //     validateStatus: function(status) {
+    //       return +status === 200;
+    //     }
+    //   })
+    //   .then(response => {
+    //     console.log(response);
+    //     if (response.data.already_joined_event) {
+    //       this.setState(() => ({
+    //         already_joined_event: true
+    //       }));
+    //     }
+    //   })
+    //   .catch(function(error) {
+    //     if (!error.response) {
+    //       sessionStorage.removeItem(WebConstants.TOKEN);
+    //     }
+    //   });
   }
   getSpace() {
     axios
@@ -146,14 +150,12 @@ export default class Course extends React.Component {
     const course = this.state.course;
     const tabs = [{ title: "活动详情" }, { title: <Badge>共享空间</Badge> }];
 
-    const lessons =
-      this.state.space.lessons ||
-      [].map(lesson => ({
-        value: lesson.name,
-        label: lesson.label
-      }));
+    const lessons = (this.state.space.lessons || []).map(lesson => ({
+      value: lesson.name,
+      label: lesson.name
+    }));
     const courseID = +this.props.match.params.id;
-    const currentTab = this.props.tabMap.get(courseID);
+    const currentTab = this.props.currentTab;
     return (
       <div key={courseID} id="course">
         <Tabs
