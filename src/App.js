@@ -14,19 +14,28 @@ import About from "./about/About";
 import Invitation from "./invitation/Invitation";
 import Settings from "./settings/Settings";
 import ScrollToTop from "./components/ScrollToTop";
-import OAMap from './map/Map';
+import OAMap from "./map/Map";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      type: 0
-    }
+      type: 0,
+      tabMap: new Map()
+    };
     this.onChange = this.onChange.bind(this);
+    this.onTabChange = this.onTabChange.bind(this);
   }
   onChange(type) {
     this.setState({
       type: type
+    });
+  }
+  onTabChange(courseID, currentTab) {
+    this.setState(prevState => {
+      return Object.assign(prevState, {
+        tabMap: prevState.tabMap.set(courseID, currentTab)
+      });
     });
   }
   render() {
@@ -34,9 +43,25 @@ class App extends React.Component {
       <Router>
         <ScrollToTop>
           <div>
-            <Route exact path="/" render={()=><Home type={this.state.type} onChange={this.onChange}></Home>} />
+            <Route
+              exact
+              path="/"
+              render={() => (
+                <Home type={this.state.type} onChange={this.onChange} />
+              )}
+            />
             <Route path="/profile" component={Profile} />
-            <Route exact path="/course/:id" component={Course} />
+            <Route
+              exact
+              path="/course/:id"
+              render={(props) => (
+                <Course
+                  {...props}
+                  tabMap={this.state.tabMap}
+                  onTabChange={this.onTabChange}
+                />
+              )}
+            />
             <Route exact path="/course/:id/entryForm" component={EntryForm} />
             <Route exact path="/course/:id/map" component={OAMap} />
             <Route exact path="/" component={TabBar} />

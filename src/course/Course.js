@@ -114,12 +114,10 @@ export default class Course extends React.Component {
       <div key={course.id} id="course">
         <Tabs
           tabs={tabs}
-          initialPage={this.state.currentTab}
+          initialPage={this.props.tabMap.get(course.id)}
           onChange={(tab, index) => {
             console.log("onChange", index, tab);
-            this.setState({
-              currentTab: index
-            });
+            this.props.onTabChange(course.id, index);
           }}
           onTabClick={(tab, index) => {
             console.log("onTabClick", index, tab);
