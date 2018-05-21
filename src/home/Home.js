@@ -22,42 +22,38 @@ class Home extends React.Component {
     };
     this.filter = this.filter.bind(this);
   }
-  componentWillMount() {
+  componentDidMount() {
     document.title = "新生学院";
     this.filter(this.props.type);
-  }
-  componentDidUpdate() {
-
-
   }
   row(course) {
     return (
       <Link
-        to={"/course/" + course.course_id}
-        key={course.course_id}
+        to={"/course/" + course.get('course_id')}
+        key={course.get('course_id')}
         className="course"
       >
         <img
           className="cover"
           src={
-            "https://www.jieshu.mobi:8181" + course.event_frontcover_filepath
+            "https://www.jieshu.mobi:8181" + course.get('event_frontcover_filepath')
           }
           alt=""
         />
         <div className="info">
-          <div className="name">{course.title}</div>
+          <div className="name">{course.get('title')}</div>
           <div className="time">
             <label htmlFor="">时间：</label>
-            {Moment(course.event_start_date).format("YYYY/MM/DD")} ～{" "}
-            {Moment(course.event_end_date).format("YYYY/MM/DD")}
+            {Moment(course.get('event_start_date')).format("YYYY/MM/DD")} ～{" "}
+            {Moment(course.get('event_end_date')).format("YYYY/MM/DD")}
           </div>
           <div className="address">
             <label htmlFor="">地点：</label>
-            {course.address}
+            {course.get('address')}
           </div>
           <div className="quota">
             <label htmlFor="">人数：</label>
-            限{course.max_attendence}人
+            限{course.get('max_attendence')}人
           </div>
           <div className="period">
             <Period
@@ -185,6 +181,7 @@ class Home extends React.Component {
     })
   }
   render() {
+    console.log('render');
     return (
       <div id="home">
         <Carousel autoplay={false} infinite selectedIndex={0} style={{height: 136}}>

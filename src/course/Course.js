@@ -276,8 +276,8 @@ export default class Course extends React.Component {
                   <div
                     className="detail"
                     dangerouslySetInnerHTML={{
-                      __html: course.get["event_main_content"]
-                        ? this.generateNewLine(course.get["event_main_content"])
+                      __html: course.get("event_main_content")
+                        ? this.generateNewLine(course.get("event_main_content"))
                         : "活动详情"
                     }}
                   />
