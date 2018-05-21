@@ -33,14 +33,13 @@ export default class Course extends React.Component {
   }
 
   componentDidMount() {
+    document.title = "课程主页";
     this.getData();
   }
   componentWillReceiveProps() {
     this.getData();
   }
   getData() {
-    document.title = "课程主页";
-
     const currentTab = this.props.tabMap.get(+this.props.match.params.id);
 
     if (currentTab === 0) {
@@ -147,16 +146,12 @@ export default class Course extends React.Component {
     const course = this.state.course;
     const tabs = [{ title: "活动详情" }, { title: <Badge>共享空间</Badge> }];
 
-    const lessons = [
-      {
-        value: "第一课 古希腊绘画艺术",
-        label: "第一课 古希腊绘画艺术"
-      },
-      {
-        value: "第二课 罗马绘画及马赛克艺术",
-        label: "第二课 罗马绘画及马赛克艺术"
-      }
-    ];
+    const lessons =
+      this.state.space.lessons ||
+      [].map(lesson => ({
+        value: lesson.name,
+        label: lesson.label
+      }));
     const courseID = +this.props.match.params.id;
     const currentTab = this.props.tabMap.get(courseID);
     return (
@@ -173,106 +168,101 @@ export default class Course extends React.Component {
             console.log("onTabClick", index, tab);
           }}
           swipeable={false}
-          ref={this.setTabsRef}
         >
-          <div
-            style={
-              {
-                // display: "flex",
-                // justifyContent: "center",
-                // flexDirection: "column",
-                // backgroundColor: "#fff"
-              }
-            }
-          >
-            <div className="coverContainer">
-              <div
-                style={{
-                  backgroundImage:
-                    "url(https://www.jieshu.mobi:8181" +
-                    course.event_frontcover_filepath +
-                    ")"
-                }}
-                className="blurCover"
-              />
-              <img
-                className="cover"
-                src={
-                  "https://www.jieshu.mobi:8181" +
-                  course.event_frontcover_filepath
-                }
-                alt=""
-              />
-            </div>
+          <div>
+            {this.state.course.title && (
+              <div>
+                <div className="coverContainer">
+                  <div
+                    style={{
+                      backgroundImage:
+                        "url(https://www.jieshu.mobi:8181" +
+                        course.event_frontcover_filepath +
+                        ")"
+                    }}
+                    className="blurCover"
+                  />
+                  <img
+                    className="cover"
+                    src={
+                      "https://www.jieshu.mobi:8181" +
+                      course.event_frontcover_filepath
+                    }
+                    alt=""
+                  />
+                </div>
 
-            <div className="info">
-              <div className="title">
-                <span className="name">{course.title}</span>
+                <div className="info">
+                  <div className="title">
+                    <span className="name">{course.title}</span>
+                  </div>
+                  <div className="deadline">
+                    报名截止至：{Moment(course.event_start_date).format(
+                      "YYYY/MM/DD"
+                    )}
+                    <Period
+                      course={course}
+                      images={[
+                        require("./assets/period_enrolling.png"),
+                        require("./assets/period_ongoing.png"),
+                        require("./assets/period_finish.png")
+                      ]}
+                    />
+                  </div>
+                  <List>
+                    <Item
+                      extra={
+                        "已报" +
+                        course.enrolled_already +
+                        "人/限制" +
+                        course.max_attendence +
+                        "人"
+                      }
+                    >
+                      报名人数
+                    </Item>
+                    <Item
+                      extra={
+                        Moment(course.startDate).format("YYYY/MM/DD") +
+                        " ~ " +
+                        Moment(course.endDate).format("YYYY/MM/DD")
+                      }
+                      wrap
+                    >
+                      活动时间
+                    </Item>
+                    <Item
+                      extra={
+                        <Link to={this.props.match.url + "/map"}>
+                          <div>
+                            <OAIcon
+                              size="xxs"
+                              style={{ color: "#9b9b9b" }}
+                              type={require("../assets/icon_place.svg")}
+                            />
+                            {course.address}
+                          </div>
+                        </Link>
+                      }
+                      arrow="horizontal"
+                    >
+                      活动地点
+                    </Item>
+                    <Item extra="免费">费用</Item>
+                  </List>
+                  <div
+                    className="detail"
+                    dangerouslySetInnerHTML={{
+                      __html: course.event_main_content
+                        ? this.generateNewLine(course.event_main_content)
+                        : "活动详情"
+                    }}
+                  />
+                </div>
               </div>
-              <div className="deadline">
-                报名截止至：{Moment(course.event_start_date).format(
-                  "YYYY/MM/DD"
-                )}
-                <Period
-                  course={course}
-                  images={[
-                    require("./assets/period_enrolling.png"),
-                    require("./assets/period_ongoing.png"),
-                    require("./assets/period_finish.png")
-                  ]}
-                />
-              </div>
-              <List>
-                <Item
-                  extra={
-                    "已报" +
-                    course.enrolled_already +
-                    "人/限制" +
-                    course.max_attendence +
-                    "人"
-                  }
-                >
-                  报名人数
-                </Item>
-                <Item
-                  extra={
-                    Moment(course.startDate).format("YYYY/MM/DD") +
-                    " ~ " +
-                    Moment(course.endDate).format("YYYY/MM/DD")
-                  }
-                  wrap
-                >
-                  活动时间
-                </Item>
-                <Item
-                  extra={
-                    <Link to={this.props.match.url + "/map"}>
-                      <div>
-                        <OAIcon
-                          size="xxs"
-                          style={{ color: "#9b9b9b" }}
-                          type={require("../assets/icon_place.svg")}
-                        />
-                        {course.address}
-                      </div>
-                    </Link>
-                  }
-                  arrow="horizontal"
-                >
-                  活动地点
-                </Item>
-                <Item extra="免费">费用</Item>
-              </List>
-              <div
-                className="detail"
-                dangerouslySetInnerHTML={{
-                  __html: course.event_main_content
-                    ? this.generateNewLine(course.event_main_content)
-                    : "活动详情"
-                }}
-              />
-            </div>
+            )}
           </div>
+
           <div
             style={{
               display: "flex",
@@ -286,24 +276,21 @@ export default class Course extends React.Component {
               onChange={this.onChange}
               style={{ width: "100%", marginTop: 10 }}
             >
-              <Accordion.Panel header="第一课-史前">
-                <List className="my-list">
-                  <List.Item
-                    onClick={this.preview.bind(
-                      this,
-                      12,
-                      "http://123.56.222.135:8080/study/%E5%9F%BA%E4%BA%8ECreatejs%E7%9A%84%E8%BF%90%E8%90%A5%E6%B8%B8%E6%88%8F.pdf"
-                    )}
-                  >
-                    加德纳艺术史.pdf
-                  </List.Item>
-                  <List.Item>古希腊古罗马艺术史课上讨论录音.ppt</List.Item>
-                </List>
-              </Accordion.Panel>
-              <Accordion.Panel header="第二课-古希腊" className="pad">
-                <List.Item>加德纳艺术史.doc</List.Item>
-                <List.Item>加德纳艺术史.jpg</List.Item>
-              </Accordion.Panel>
+              {this.state.space.lessons &&
+                this.state.space.lessons.map(lesson => (
+                  <Accordion.Panel key={lesson.name} header={lesson.name}>
+                    <List className="my-list">
+                      {lesson.files.map(file => (
+                        <List.Item
+                          key={file.name}
+                          onClick={this.preview.bind(this, 12, file.url)}
+                        >
+                          {file.name}
+                        </List.Item>
+                      ))}
+                    </List>
+                  </Accordion.Panel>
+                ))}
             </Accordion>
           </div>
         </Tabs>
