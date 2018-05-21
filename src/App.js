@@ -21,7 +21,9 @@ class App extends React.Component {
     super(props);
     this.state = {
       type: 0,
-      tabMap: new Map()
+      tabMap: new Map([
+        [1, 1]
+      ])
     };
     this.onChange = this.onChange.bind(this);
     this.onTabChange = this.onTabChange.bind(this);

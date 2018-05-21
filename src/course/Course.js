@@ -1,7 +1,15 @@
 import React from "react";
 import Moment from "moment";
 import axios from "../utils/customAxios";
-import { Button, List, Badge, WhiteSpace, Tabs, Accordion } from "antd-mobile";
+import {
+  Button,
+  List,
+  Badge,
+  WhiteSpace,
+  Tabs,
+  Accordion,
+  Modal
+} from "antd-mobile";
 import BottomPickerView from "../components/bottomPickerView/bottomPickerView";
 import OAIcon from "../components/icon/Icon.js";
 import Period from "../components/period/Period";
@@ -10,12 +18,14 @@ import WebConstants from "../web_constants";
 import { Link } from "react-router-dom";
 
 const Item = List.Item;
+const alert = Modal.alert;
 
 export default class Course extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       course: {},
+      space: {},
       already_joined_event: false,
       currentTab: 0,
       pickerVisible: false
@@ -23,8 +33,28 @@ export default class Course extends React.Component {
   }
 
   componentDidMount() {
+    this.getData();
+  }
+  componentWillReceiveProps() {
+    this.getData();
+  }
+  getData() {
     document.title = "课程主页";
 
+    const currentTab = this.props.tabMap.get(+this.props.match.params.id);
+
+    if (currentTab === 0) {
+      this.getCourse();
+    } else if (currentTab === 1) {
+      this.getSpace();
+    }
+
+    if (!sessionStorage.getItem(WebConstants.TOKEN)) {
+      console.log(111);
+      return;
+    }
+  }
+  getCourse() {
     axios
       .get("/RetrieveEventByEventIdServlet", {
         params: {
@@ -42,10 +72,6 @@ export default class Course extends React.Component {
       .catch(function(error) {
         console.log(error);
       });
-    if (!sessionStorage.getItem(WebConstants.TOKEN)) {
-      console.log(111);
-      return;
-    }
     axios
       .get("/RetrieveEventParticipantsServlet", {
         params: {
@@ -70,6 +96,25 @@ export default class Course extends React.Component {
         }
       });
   }
+  getSpace() {
+    axios
+      .get("/space", {
+        params: {
+          event_id: this.props.match.params.id,
+          [WebConstants.TOKEN]: sessionStorage.getItem(WebConstants.TOKEN)
+        }
+      })
+      .then(response => {
+        console.log(response);
+        document.title = response.data.title;
+        this.setState(() => ({
+          space: response.data
+        }));
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
   generateNewLine(inString) {
     if (inString !== null && typeof inString !== "undefined") {
       let outString = inString.replace(/\n/g, "<br/>");
@@ -89,6 +134,15 @@ export default class Course extends React.Component {
       pickerVisible: true
     });
   };
+  preview(size, file, e) {
+    if (size > 5) {
+      alert("", "当前为非Wi-Fi网络，是否继续查看全球通史.pdf(3.4MB)", [
+        { text: "取消", onPress: () => console.log("cancel") },
+        { text: "继续下载", onPress: () => (document.location.href = file) }
+      ]);
+    }
+  }
+
   render() {
     const course = this.state.course;
     const tabs = [{ title: "活动详情" }, { title: <Badge>共享空间</Badge> }];
@@ -103,15 +157,17 @@ export default class Course extends React.Component {
         label: "第二课 罗马绘画及马赛克艺术"
       }
     ];
-    const currentTab = this.props.tabMap.get(course.id);
+    const courseID = +this.props.match.params.id;
+    const currentTab = this.props.tabMap.get(courseID);
     return (
-      <div key={course.id} id="course">
+      <div key={courseID} id="course">
         <Tabs
           tabs={tabs}
           initialPage={currentTab}
           onChange={(tab, index) => {
             console.log("onChange", index, tab);
-            this.props.onTabChange(course.id, index);
+
+            this.props.onTabChange(courseID, index);
           }}
           onTabClick={(tab, index) => {
             console.log("onTabClick", index, tab);
@@ -232,7 +288,15 @@ export default class Course extends React.Component {
             >
               <Accordion.Panel header="第一课-史前">
                 <List className="my-list">
-                  <List.Item>加德纳艺术史.pdf</List.Item>
+                  <List.Item
+                    onClick={this.preview.bind(
+                      this,
+                      12,
+                      "http://123.56.222.135:8080/study/%E5%9F%BA%E4%BA%8ECreatejs%E7%9A%84%E8%BF%90%E8%90%A5%E6%B8%B8%E6%88%8F.pdf"
+                    )}
+                  >
+                    加德纳艺术史.pdf
+                  </List.Item>
                   <List.Item>古希腊古罗马艺术史课上讨论录音.ppt</List.Item>
                 </List>
               </Accordion.Panel>
