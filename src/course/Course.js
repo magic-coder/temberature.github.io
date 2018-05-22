@@ -224,7 +224,7 @@ export default class Course extends React.Component {
                     <span className="name">{course.get("title")}</span>
                   </div>
                   <div className="deadline">
-                    报名截止至：{Moment(course.get("event_start_date")).format(
+                    报名截止至：{Moment(course.get("event_register_deadline")).format(
                       "YYYY/MM/DD"
                     )}
                     <Period
@@ -250,9 +250,9 @@ export default class Course extends React.Component {
                     </Item>
                     <Item
                       extra={
-                        Moment(course.get("startDate")).format("YYYY/MM/DD") +
+                        Moment(course.get("event_start_date")).format("YYYY/MM/DD") +
                         " ~ " +
-                        Moment(course.get("endDate")).format("YYYY/MM/DD")
+                        Moment(course.get("event_end_date")).format("YYYY/MM/DD")
                       }
                       wrap
                     >

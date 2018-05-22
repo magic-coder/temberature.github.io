@@ -54,7 +54,6 @@ it("valid data", () => {
       ).debug()
     ).toBe(value.expect);
   });
-
 });
 
 it("invalid data", () => {

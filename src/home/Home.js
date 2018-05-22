@@ -160,7 +160,7 @@ class Home extends React.Component {
         this.setState({
           isLoading: false,
           dataSource: response.data.sort((a, b) => {
-            return a.event_end_date < b.event_end_date;
+            return a.get('event_end_date') < b.get('event_end_date');
           })
         });
       });

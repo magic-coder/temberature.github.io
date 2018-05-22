@@ -15,7 +15,7 @@ export default class Period extends React.Component {
         ? course.get("event_start_date")
         : course.event_start_date,
       end = course.get ? course.get("event_end_date") : course.event_end_date;
-    const valid = deadline <= start && start <= end;
+    const valid = deadline <= end && start <= end;
     if (!valid) {
       return <img src="" alt="" />;
     }
