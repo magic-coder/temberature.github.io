@@ -37,7 +37,7 @@
           "import",
           {
             "libraryName": "antd-mobile",
-            "libraryDirectory": "components",
+            "libraryDirectory": "lib",
           }
         ]
       ]
