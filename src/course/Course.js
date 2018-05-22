@@ -92,7 +92,7 @@ export default class Course extends React.Component {
       })
       .then(response => {
         console.log(response);
-        document.title = response.data.title;
+        document.title = response.data.get('title');
         this.setState(() => ({
           course: response.data
         }));
@@ -134,7 +134,7 @@ export default class Course extends React.Component {
       })
       .then(response => {
         console.log(response);
-        document.title = response.data.title;
+        document.title = response.data.get('title');
         this.setState(() => ({
           space: response.data
         }));

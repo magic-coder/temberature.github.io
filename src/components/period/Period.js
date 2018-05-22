@@ -27,6 +27,6 @@ export default class Period extends React.Component {
     } else if (now > end) {
       img = images[2];
     }
-    return <img src={img} alt="" />;
+    return <img src={img} style={{ verticalAlign: "bottom" }} alt="" />;
   }
 }
