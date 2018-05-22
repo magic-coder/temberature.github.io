@@ -157,11 +157,12 @@ class Home extends React.Component {
         }
       })
       .then(response => {
+        const sorted = response.data.sort((a, b) => {
+          return b.get("event_end_date") - a.get("event_end_date");
+        });
         this.setState({
           isLoading: false,
-          dataSource: response.data.sort((a, b) => {
-            return a.get('event_end_date') < b.get('event_end_date');
-          })
+          dataSource: sorted
         });
       });
   }
@@ -237,7 +238,6 @@ class Home extends React.Component {
           onFix={this.onFix}
           fixed={this.state.fixed}
           onInit={fixedTop => {
-            console.log(fixedTop);
             this.setState({
               fixedTop: fixedTop
             });
