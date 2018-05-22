@@ -15,13 +15,14 @@ import Invitation from "./invitation/Invitation";
 import Settings from "./settings/Settings";
 import ScrollToTop from "./components/ScrollToTop";
 import OAMap from "./map/Map";
+import Station from './station/station';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       type: 0,
-      tabMap: new Map([[1, 1]]),
+      tabMap: new Map([[1, 0]]),
       currentCourse: 0
     };
     this.onChange = this.onChange.bind(this);
@@ -82,6 +83,7 @@ class App extends React.Component {
             <Route path="/about" component={About} />
             <Route path="/invitation" component={Invitation} />
             <Route path="/settings" component={Settings} />
+            <Route path="/station" component={Station} />
           </div>
         </ScrollToTop>
       </Router>
