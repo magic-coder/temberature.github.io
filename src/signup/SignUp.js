@@ -117,12 +117,12 @@ class SignUp extends React.Component {
       code
     });
   };
-  sendCode (timer) {
+  sendCode (start) {
     if (this.state.hasPhoneError) {
       Toast.info('请输入正确手机号');
       return;
     }
-    timer.start();
+    start();
     this.setState({
       animating: true
     });

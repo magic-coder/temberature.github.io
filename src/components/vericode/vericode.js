@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "antd-mobile";
-import Timer from "../../utils/Timer";
 import classNames from "classnames/bind";
+import Countdown from "../../utils/Countdown";
 
 class VeriCode extends React.Component {
   constructor(props) {
@@ -9,38 +9,36 @@ class VeriCode extends React.Component {
     this.state = {
       remain: 0
     };
+    this.start = this.start.bind(this);
+  }
+  start() {
     let that = this;
-    this.timer = new Timer({
-      hours: 0,
-      min: 0,
-      seconds: 5,
-      format: 's',
-      onStart: function() {
+    return new Countdown(
+      '5',
+      function(seconds) {
         that.setState({
-          remain: this.remain
+          remain: seconds
         });
       },
-      onTick: function() {
-        that.setState({
-          remain: this.remain
-        });
-        console.log(this.remain);
-      },
-      onFinish: () => {
-        console.log("finished");
+      function() {
         that.setState({
           remain: 0
-        })
+        });
       }
-    });
+    );
   }
   onClick = () => {
-    this.props.onClick(this.timer);
-  }
+    this.props.onClick(this.start);
+  };
   render() {
     return (
-      <Button onClick={this.onClick} className={classNames({ locked: this.state.remain !== 0 })}>
-        {this.state.remain === 0 ? "获取验证码" : `${this.state.remain}秒后重新发送`}
+      <Button
+        onClick={this.onClick}
+        className={classNames({ locked: this.state.remain !== 0 })}
+      >
+        {this.state.remain === 0
+          ? "获取验证码"
+          : `${this.state.remain}秒后重新发送`}
       </Button>
     );
   }
