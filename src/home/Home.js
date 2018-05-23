@@ -15,16 +15,16 @@ class Home extends React.Component {
     super(props);
     this.state = {
       dataSource: List(),
-      type: 0,
       isLoading: false,
       fixedTop: 0,
-      fixed: false
+      fixed: false,
     };
     this.filter = this.filter.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
   componentDidMount() {
     document.title = "新生学院";
-    this.filter(this.props.type);
+    this.filter();
   }
   shouldComponentUpdate(nextProps, nextState) {
     const thisProps = this.props || {};
@@ -51,6 +51,55 @@ class Home extends React.Component {
       }
     }
     return false;
+  }
+  filter() {
+    if (this.state.fixed) {
+      window.scrollTo(0, this.state.fixedTop);
+    }
+    this.setState({
+      isLoading: true,
+      dataSource: []
+    });
+    this.getCourses();
+  }
+  async getCourses() {
+
+    let type = ["", "哲学", "艺术", "历史", "文学", "科技"][this.props.type];
+    let response = await axios.get("/RetrieveEventServlet", {
+      params: {
+        event_tag: encodeURIComponent(type)
+      }
+    });
+    this.setState({
+      isLoading: false,
+      dataSource: response.data.sort((a, b) => {
+        return b.get("event_end_date") - a.get("event_end_date");
+      })
+    });
+  }
+  loadMore = () => {
+    // this.setState({ isLoading: true });
+    return axios.get("/RetrieveEventServlet").then(response => {
+      return;
+      // this.setState({ isLoading: false });
+      // this.setState(prev => {
+      //   return {
+      //     dataSource: prev.dataSource.concat(
+      //       response.data.sort((a, b) => {
+      //         return a.event_end_date < b.event_end_date;
+      //       })
+      //     )
+      //   };
+      // });
+    });
+  };
+  onFix = fixed => {
+    this.setState({
+      fixed: fixed
+    });
+  };
+  onChange(type) {
+    this.props.onChange(type);
   }
   row(course) {
     return (
@@ -101,70 +150,43 @@ class Home extends React.Component {
     return (
       <header className="tabs">
         <span
-          className={classNames({ active: this.state.type === 0 })}
-          onClick={this.filter.bind(this, 0)}
+          className={classNames({ active: this.props.type === 0 })}
+          onClick={this.onChange.bind(this, 0)}
         >
           全部<span className="mark" />
         </span>
         <span
-          className={classNames({ active: this.state.type === 1 })}
-          onClick={this.filter.bind(this, 1)}
+          className={classNames({ active: this.props.type === 1 })}
+          onClick={this.onChange.bind(this, 1)}
         >
           哲学<span className="mark" />
         </span>
         <span
-          className={classNames({ active: this.state.type === 2 })}
-          onClick={this.filter.bind(this, 2)}
+          className={classNames({ active: this.props.type === 2 })}
+          onClick={this.onChange.bind(this, 2)}
         >
           艺术<span className="mark" />
         </span>
         <span
-          className={classNames({ active: this.state.type === 3 })}
-          onClick={this.filter.bind(this, 3)}
+          className={classNames({ active: this.props.type === 3 })}
+          onClick={this.onChange.bind(this, 3)}
         >
           历史<span className="mark" />
         </span>
         <span
-          className={classNames({ active: this.state.type === 4 })}
-          onClick={this.filter.bind(this, 4)}
+          className={classNames({ active: this.props.type === 4 })}
+          onClick={this.onChange.bind(this, 4)}
         >
           文学<span className="mark" />
         </span>
         <span
-          className={classNames({ active: this.state.type === 5 })}
-          onClick={this.filter.bind(this, 5)}
+          className={classNames({ active: this.props.type === 5 })}
+          onClick={this.onChange.bind(this, 5)}
         >
           科技<span className="mark" />
         </span>
       </header>
     );
-  }
-  filter(type) {
-    if (this.state.fixed) {
-      window.scrollTo(0, this.state.fixedTop);
-    }
-    this.setState({
-      type,
-      isLoading: true,
-      dataSource: []
-    });
-    this.props.onChange(type);
-    type = ["", "哲学", "艺术", "历史", "文学", "科技"][type];
-    axios
-      .get("/RetrieveEventServlet", {
-        params: {
-          event_tag: encodeURIComponent(type)
-        }
-      })
-      .then(response => {
-        const sorted = response.data.sort((a, b) => {
-          return b.get("event_end_date") - a.get("event_end_date");
-        });
-        this.setState({
-          isLoading: false,
-          dataSource: sorted
-        });
-      });
   }
   separator = () => {
     return (
@@ -185,27 +207,6 @@ class Home extends React.Component {
         {this.state.isLoading ? "加载中..." : "你来到了宇宙的边界"}
       </div>
     );
-  };
-  loadMore = () => {
-    // this.setState({ isLoading: true });
-    return axios.get("/RetrieveEventServlet").then(response => {
-      return;
-      // this.setState({ isLoading: false });
-      // this.setState(prev => {
-      //   return {
-      //     dataSource: prev.dataSource.concat(
-      //       response.data.sort((a, b) => {
-      //         return a.event_end_date < b.event_end_date;
-      //       })
-      //     )
-      //   };
-      // });
-    });
-  };
-  onFix = fixed => {
-    this.setState({
-      fixed: fixed
-    });
   };
   render() {
     // console.log("render");
