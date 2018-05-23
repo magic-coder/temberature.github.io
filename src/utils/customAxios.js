@@ -7,7 +7,7 @@ export default axios.create({
   timeout: 10000,
   transformResponse: [
     data => {
-      return fromJS(JSON.parse(data) || {});
+      return fromJS(JSON.parse(data||'{}'));
     }
   ]
 });

@@ -6,6 +6,7 @@ import "./SignIn.less";
 import axios from "../utils/customAxios";
 import jsSHA from "jssha";
 import WebConstants from "../web_constants";
+import URL from '../utils/URL';
 
 class SignIn extends React.Component {
   constructor(props) {
@@ -51,7 +52,7 @@ class SignIn extends React.Component {
       );
 
       Toast.success("登录成功", 1, () => {
-        this.props.history.push("/");
+        this.props.history.push(URL.getPara('callback') || '/');
       });
     } else {
       Toast.success("登录失败");

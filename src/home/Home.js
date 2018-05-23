@@ -26,6 +26,12 @@ class Home extends React.Component {
     document.title = "新生学院";
     this.filter();
   }
+  componentDidUpdate(prevProps) {
+    if (this.props.type !== prevProps.type) {
+      this.filter();
+    }
+    return true;
+  }
   shouldComponentUpdate(nextProps, nextState) {
     const thisProps = this.props || {};
     const thisState = this.state || {};

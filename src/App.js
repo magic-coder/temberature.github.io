@@ -79,7 +79,12 @@ class App extends React.Component {
             <Route path="/profile" component={TabBar} />
             <Route path="/signin" component={SignIn} />
             <Route path="/signup" component={SignUp} />
-            <Route path="/me/courses" component={MyCourses} />
+            <Route
+              path="/me/courses"
+              render={() => (
+                <MyCourses type={this.state.type} onChange={this.onChange} />
+              )}
+            />
             <Route path="/about" component={About} />
             <Route path="/invitation" component={Invitation} />
             <Route path="/settings" component={Settings} />

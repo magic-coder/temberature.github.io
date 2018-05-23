@@ -10,7 +10,7 @@ const Item = List.Item;
 
 class Profile extends React.Component {
   state = {
-    user: Map(),
+    user: Map()
   };
   componentDidMount() {
     document.title = "个人中心";
@@ -40,7 +40,7 @@ class Profile extends React.Component {
             src={require("./assets/avatar_default.png")}
             alt=""
           />
-          {this.state.user && this.state.user.get('mobilephoneNumber')}
+          {this.state.user && this.state.user.get("mobilephoneNumber")}
         </header>
         <main>
           <List>
@@ -48,7 +48,11 @@ class Profile extends React.Component {
               thumb={<OAIcon type={require("./assets/icon_course.svg")} />}
               arrow="horizontal"
               onClick={() => {
-                this.props.history.push("/me/courses");
+                if (this.state.user.get("mobilephoneNumber")) {
+                  this.props.history.push("/me/courses");
+                } else {
+                  this.props.history.push(`/signin?callback=${encodeURIComponent("/me/courses")}`);
+                }
               }}
             >
               我的活动
