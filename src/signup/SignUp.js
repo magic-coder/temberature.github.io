@@ -27,11 +27,12 @@ class SignUp extends React.Component {
       hasCodeError: false,
       hasPasswordError: false,
       animating: false,
-      validationToken: "1111",
+      validationToken: "",
       modal: false,
-      modalTip: ""
+      modalTip: "",
     };
     this.signup = this.signup.bind(this);
+    this.sendCode = this.sendCode.bind(this);
   }
   async signup() {
     this.setState({
@@ -116,7 +117,12 @@ class SignUp extends React.Component {
       code
     });
   };
-  sendCode = () => {
+  sendCode (timer) {
+    if (this.state.hasPhoneError) {
+      Toast.info('请输入正确手机号');
+      return;
+    }
+    timer.start();
     this.setState({
       animating: true
     });
@@ -185,7 +191,8 @@ class SignUp extends React.Component {
             invalid:
               this.state.hasPhoneError ||
               this.state.hasCodeError ||
-              this.state.hasPasswordError
+              this.state.hasPasswordError ||
+              this.state.validationToken === ''
           })}
           size="large"
         >

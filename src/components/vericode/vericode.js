@@ -35,8 +35,7 @@ class VeriCode extends React.Component {
     });
   }
   onClick = () => {
-    this.timer.start();
-    this.props.onClick();
+    this.props.onClick(this.timer);
   }
   render() {
     return (
