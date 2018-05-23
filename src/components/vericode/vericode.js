@@ -4,8 +4,8 @@ import Timer from "../../utils/Timer";
 import classNames from "classnames/bind";
 
 class VeriCode extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       remain: 0
     };
@@ -40,7 +40,7 @@ class VeriCode extends React.Component {
   render() {
     return (
       <Button onClick={this.onClick} className={classNames({ locked: this.state.remain !== 0 })}>
-        {this.state.remain === 0 ? "获取验证码" : this.state.remain + '秒后重新发送'}
+        {this.state.remain === 0 ? "获取验证码" : `${this.state.remain}秒后重新发送`}
       </Button>
     );
   }
