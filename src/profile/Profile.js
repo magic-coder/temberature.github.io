@@ -4,31 +4,32 @@ import "./Profile.less";
 import OAIcon from "../components/icon/Icon.js";
 import axios from "../utils/customAxios";
 import WebConstants from "../web_constants";
+import { Map } from "immutable";
 
 const Item = List.Item;
 
 class Profile extends React.Component {
   state = {
-    user: {}
+    user: Map(),
   };
   componentDidMount() {
     document.title = "个人中心";
     // you can scroll to the specified position
     // setTimeout(() => this.lv.scrollTo(0, 120), 800);
 
-    axios
-      .get("/RetrieveMyProfileDataServlet", {
-        params: {
-          [WebConstants.TOKEN]: sessionStorage.getItem(WebConstants.TOKEN)
-        }
-      })
-      .then(response => {
-        console.log(response);
-        // data = data.response
-        this.setState(() => ({
-          user: response.data
-        }));
-      });
+    this.getProfile();
+  }
+  async getProfile() {
+    let response = await axios.get("/RetrieveMyProfileDataServlet", {
+      params: {
+        [WebConstants.TOKEN]: sessionStorage.getItem(WebConstants.TOKEN)
+      }
+    });
+    console.log(response);
+    // data = data.response
+    this.setState(() => ({
+      user: response.data
+    }));
   }
   render() {
     return (
@@ -39,7 +40,7 @@ class Profile extends React.Component {
             src={require("./assets/avatar_default.png")}
             alt=""
           />
-          {this.state.user.mobilephoneNumber}
+          {this.state.user && this.state.user.get('mobilephoneNumber')}
         </header>
         <main>
           <List>

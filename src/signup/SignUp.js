@@ -1,6 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Button, List, InputItem, Toast, Modal } from "antd-mobile";
+import {
+  Button,
+  List,
+  InputItem,
+  Toast,
+  Modal,
+  ActivityIndicator
+} from "antd-mobile";
 import { createForm } from "rc-form";
 import "./SignUp.less";
 import axios from "../utils/customAxios";
@@ -10,60 +17,60 @@ import VeriCode from "../components/vericode/vericode";
 import classNames from "classnames/bind";
 
 class SignUp extends React.Component {
-  state = {
-    user_mobilephone_number: "15910707069",
-    code: 123456,
-    password: "qazwsx",
-    hasPhoneError: false,
-    hasCodeError: false,
-    hasPasswordError: false,
-    animating: false,
-    validationToken: "1111",
-    modal: false,
-    modalTip: ""
-  };
-  signup = () => {
+  constructor(props) {
+    super(props);
+    this.state = {
+      user_mobilephone_number: "15910707069",
+      code: 123456,
+      password: "qazwsx",
+      hasPhoneError: false,
+      hasCodeError: false,
+      hasPasswordError: false,
+      animating: false,
+      validationToken: "1111",
+      modal: false,
+      modalTip: ""
+    };
+    this.signup = this.signup.bind(this);
+  }
+  async signup() {
     this.setState({
       animating: true
     });
     const shaObj = new jsSHA("SHA-256", "TEXT");
     shaObj.update(this.state.password);
     const encryptedPassword = shaObj.getHash("HEX");
-    axios
-      .get("/RegisterServlet", {
-        params: {
-          user_mobilephone_number: this.state.user_mobilephone_number,
-          password: encryptedPassword,
-          validation_code: this.state.code,
-          validation_token: this.state.validationToken
-        }
-      })
-      .then(response => {
-        this.setState({
-          animating: false
-        });
-        console.log(response.data.retdesc);
-        const json = response.data;
-        if (json.registration_result === WebConstants.SUCCESS) {
-          Toast.info("注册成功～");
-        } else {
-          let modalTip = "注册失败";
-          // if (json.already_registered) {
-          //   modalTip += "该手机号已注册";
-          // }
-          // if (!json.valid_phonenumber) {
-          //   modalTip += "无效的手机号";
-          // }
-          // if (json.validation_code_valid && !json.validation_code_valid) {
-          //   modalTip += "无效的验证码";
-          // }
-          this.setState({
-            modal: true,
-            modalTip
-          });
-        }
+    let response = await axios.get("/RegisterServlet", {
+      params: {
+        user_mobilephone_number: this.state.user_mobilephone_number,
+        password: encryptedPassword,
+        validation_code: this.state.code,
+        validation_token: this.state.validationToken
+      }
+    });
+    this.setState({
+      animating: false
+    });
+    const signResult = response.data;
+    if (signResult.get("registration_result") === WebConstants.SUCCESS) {
+      Toast.info("注册成功～");
+    } else {
+      let modalTip = "注册失败";
+      // if (signResult.already_registered) {
+      //   modalTip += "该手机号已注册";
+      // }
+      // if (!signResult.valid_phonenumber) {
+      //   modalTip += "无效的手机号";
+      // }
+      // if (signResult.validation_code_valid && !signResult.validation_code_valid) {
+      //   modalTip += "无效的验证码";
+      // }
+      this.setState({
+        modal: true,
+        modalTip
       });
-  };
+    }
+  }
   onErrorClick = msg => {
     Toast.info(msg);
   };
@@ -123,10 +130,9 @@ class SignUp extends React.Component {
         this.setState({
           animating: false
         });
-        console.log(response.data.retdesc);
-        if (response.data.validation_token) {
+        if (response.data.get('validation_token')) {
           this.setState({
-            validationToken: response.data.validation_token
+            validationToken: response.data.get('validation_token')
           });
           Toast.info("验证码发送成功～");
         } else {
@@ -192,6 +198,8 @@ class SignUp extends React.Component {
         <div className="agreementsTip tip">
           点击“注册”按钮，即表示您同意<a href="">《服务与隐私协议》</a>
         </div>
+
+        <ActivityIndicator toast animating={this.state.animating} />
         <Modal
           visible={this.state.modal}
           transparent

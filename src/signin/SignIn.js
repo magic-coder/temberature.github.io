@@ -8,51 +8,55 @@ import jsSHA from "jssha";
 import WebConstants from "../web_constants";
 
 class SignIn extends React.Component {
-  state = {
-    user_mobilephone_number: "15910707069",
-    password: "tember158569",
-    hasPhoneError: false,
-    hasPasswordError: false,
-    animating: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      user_mobilephone_number: "15910707069",
+      password: "tember158569",
+      hasPhoneError: false,
+      hasPasswordError: false,
+      animating: false
+    };
+    this.signin = this.signin.bind(this);
+  }
+
   componentDidMount() {
     window.scrollTo(0, 0);
   }
-  signin = () => {
+  async signin() {
     this.setState({
       animating: true
     });
     const shaObj = new jsSHA("SHA-256", "TEXT");
     shaObj.update(this.state.password);
     const encryptedPassword = shaObj.getHash("HEX");
-    axios
-      .post("/LoginServlet", {
-        params: {
-          user_mobilephone_number: this.state.user_mobilephone_number.replace(
-            /\s/g,
-            ""
-          ),
-          password: encryptedPassword
-        }
-      })
-      .then(response => {
-        this.setState({
-          animating: false
-        });
-        console.log(response.data.retdesc);
-        const loginResult = response.data;
-        if (loginResult.login_success) {
-          sessionStorage.setItem(
-            WebConstants.TOKEN,
-            loginResult[WebConstants.TOKEN]
-          );
+    let response = await axios.get("/LoginServlet", {
+      params: {
+        user_mobilephone_number: this.state.user_mobilephone_number.replace(
+          /\s/g,
+          ""
+        ),
+        password: encryptedPassword
+      }
+    }).catch(e => console.log(e));
 
-          Toast.success("登录成功", 1, () => {
-            this.props.history.push("/");
-          });
-        }
+    this.setState({
+      animating: false
+    });
+    const loginResult = response.data;
+    if (loginResult.get("login_success")) {
+      sessionStorage.setItem(
+        WebConstants.TOKEN,
+        loginResult.get(WebConstants.TOKEN)
+      );
+
+      Toast.success("登录成功", 1, () => {
+        this.props.history.push("/");
       });
-  };
+    } else {
+      Toast.success("登录失败");
+    }
+  }
   onErrorClick = () => {
     if (this.state.hasError) {
       Toast.info("Please enter 11 digits");

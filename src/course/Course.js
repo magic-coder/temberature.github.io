@@ -82,24 +82,25 @@ export default class Course extends React.Component {
       return;
     }
   }
-  getCourse() {
-    axios
+  async getCourse() {
+    let response = await axios
       .get("/RetrieveEventByEventIdServlet", {
         params: {
           event_id: this.props.match.params.id,
           [WebConstants.TOKEN]: sessionStorage.getItem(WebConstants.TOKEN)
         }
       })
-      .then(response => {
-        console.log(response);
-        document.title = response.data.get('title');
-        this.setState(() => ({
-          course: response.data
-        }));
-      })
       .catch(function(error) {
         console.log(error);
       });
+
+    if (response) {
+      document.title = response.data.get("title");
+      this.setState(() => ({
+        course: response.data
+      }));
+    }
+
     // axios
     //   .get("/RetrieveEventParticipantsServlet", {
     //     params: {
@@ -124,24 +125,20 @@ export default class Course extends React.Component {
     //     }
     //   });
   }
-  getSpace() {
-    axios
+  async getSpace() {
+    let response = await axios
       .get("/space", {
         params: {
           event_id: this.props.match.params.id,
           [WebConstants.TOKEN]: sessionStorage.getItem(WebConstants.TOKEN)
         }
       })
-      .then(response => {
-        console.log(response);
-        document.title = response.data.get('title');
-        this.setState(() => ({
-          space: response.data
-        }));
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+    if (response) {
+      document.title = response.data.get("title");
+      this.setState(() => ({
+        space: response.data
+      }));
+    }
   }
   generateNewLine(inString) {
     if (inString !== null && typeof inString !== "undefined") {
@@ -224,9 +221,9 @@ export default class Course extends React.Component {
                     <span className="name">{course.get("title")}</span>
                   </div>
                   <div className="deadline">
-                    报名截止至：{Moment(course.get("event_register_deadline")).format(
-                      "YYYY/MM/DD"
-                    )}
+                    报名截止至：{Moment(
+                      course.get("event_register_deadline")
+                    ).format("YYYY/MM/DD")}
                     <Period
                       course={course}
                       images={[
@@ -250,9 +247,13 @@ export default class Course extends React.Component {
                     </Item>
                     <Item
                       extra={
-                        Moment(course.get("event_start_date")).format("YYYY/MM/DD") +
+                        Moment(course.get("event_start_date")).format(
+                          "YYYY/MM/DD"
+                        ) +
                         " ~ " +
-                        Moment(course.get("event_end_date")).format("YYYY/MM/DD")
+                        Moment(course.get("event_end_date")).format(
+                          "YYYY/MM/DD"
+                        )
                       }
                       wrap
                     >

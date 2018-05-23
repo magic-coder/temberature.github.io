@@ -17,7 +17,7 @@ class Home extends React.Component {
       dataSource: List(),
       isLoading: false,
       fixedTop: 0,
-      fixed: false,
+      fixed: false
     };
     this.filter = this.filter.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -63,13 +63,13 @@ class Home extends React.Component {
     this.getCourses();
   }
   async getCourses() {
-
     let type = ["", "哲学", "艺术", "历史", "文学", "科技"][this.props.type];
     let response = await axios.get("/RetrieveEventServlet", {
       params: {
         event_tag: encodeURIComponent(type)
       }
     });
+
     this.setState({
       isLoading: false,
       dataSource: response.data.sort((a, b) => {
