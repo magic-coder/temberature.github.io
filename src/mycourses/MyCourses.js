@@ -194,9 +194,10 @@ class Home extends React.Component {
     //   </header>
     // );
   }
-  separator = () => {
+  separator(course) {
     return (
       <div
+        key={course.get("course_id") * 2}
         style={{
           backgroundColor: "#E5E5E5",
           width: 335,
@@ -206,7 +207,7 @@ class Home extends React.Component {
         }}
       />
     );
-  };
+  }
   footer = () => {
     return (
       <div style={{ padding: 20, textAlign: "center" }}>
@@ -220,10 +221,10 @@ class Home extends React.Component {
       <div id="mycourses">
         <ListView
           dataSource={this.state.dataSource}
-          renderRow={course => this.row(course)}
-          renderHeader={() => this.header()}
-          renderSeparator={() => this.separator()}
-          renderFooter={() => this.footer()}
+          renderRow={this.row}
+          renderHeader={this.header}
+          renderSeparator={this.separator}
+          renderFooter={this.footer}
           useBodyScroll
           loadMore={this.loadMore}
           onFix={this.onFix}
