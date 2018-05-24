@@ -99,7 +99,7 @@ class ListView extends React.Component {
         </div>
         <div className="list-view-section-body">
           {this.props.dataSource.map(val => {
-            return [this.props.renderRow(val), this.props.renderSeparator()];
+            return [this.props.renderRow(val), this.props.renderSeparator(val)];
           })}
         </div>
         <div className="am-list-footer">{this.props.renderFooter()}</div>
