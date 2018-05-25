@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`invalid data 1`] = `
+<img
+  alt=""
+  src=""
+/>
+`;
+
+exports[`valid data 1`] = `
+<img
+  alt=""
+  src="period_enrolling.png"
+  style={
+    Object {
+      "verticalAlign": "bottom",
+    }
+  }
+/>
+`;
+
+exports[`valid data 2`] = `
+<img
+  alt=""
+  src="period_ongoing.png"
+  style={
+    Object {
+      "verticalAlign": "bottom",
+    }
+  }
+/>
+`;
+
+exports[`valid data 3`] = `
+<img
+  alt=""
+  src="period_finish.png"
+  style={
+    Object {
+      "verticalAlign": "bottom",
+    }
+  }
+/>
+`;
