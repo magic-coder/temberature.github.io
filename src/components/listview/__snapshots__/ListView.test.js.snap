@@ -2,13 +2,13 @@
 
 exports[`renders correctly 1`] = `
 <div
-  className="am-list-view-scrollview"
+  className="oa-list-view-scrollview"
 >
   <div
-    className="am-list-header"
+    className="oa-list-header"
     style={
       Object {
-        "position": false,
+        "position": "",
         "top": 0,
       }
     }
@@ -18,7 +18,7 @@ exports[`renders correctly 1`] = `
     </div>
   </div>
   <div
-    className="list-view-section-body"
+    className="oa-list-view-section-body"
   >
     <div>
       row
@@ -28,7 +28,7 @@ exports[`renders correctly 1`] = `
     </div>
   </div>
   <div
-    className="am-list-footer"
+    className="oa-list-footer"
   >
     <div>
       footer
