@@ -8,15 +8,15 @@ class OATabBar extends React.Component {
       <div className="oa-tabbar is-fixed">
         <NavLink exact to="/" className="oa-tab-item">
           <div className="oa-tab-item-icon">
-            <OAIcon type={require("./assets/icon_home.svg")} />
+            <OAIcon type={this.props.icons[0]} />
           </div>
-          <div className="oa-tab-item-label"> 新生学院</div>
+          <div className="oa-tab-item-label">{this.props.titles[0]}</div>
         </NavLink>
         <NavLink to="/profile" className="oa-tab-item">
           <div className="oa-tab-item-icon">
-            <OAIcon type={require("./assets/icon_profile.svg")} />
+            <OAIcon type={this.props.icons[1]} />
           </div>
-          <div className="oa-tab-item-label"> 个人中心</div>
+          <div className="oa-tab-item-label">{this.props.titles[1]}</div>
         </NavLink>
       </div>
     );

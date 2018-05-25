@@ -15,7 +15,7 @@ import Invitation from "./invitation/Invitation";
 import Settings from "./settings/Settings";
 import ScrollToTop from "./components/ScrollToTop";
 import OAMap from "./map/Map";
-import Station from './station/station';
+import Station from "./station/station";
 
 class App extends React.Component {
   constructor(props) {
@@ -75,7 +75,20 @@ class App extends React.Component {
             />
             <Route exact path="/course/:id/entryForm" component={EntryForm} />
             <Route exact path="/course/:id/map" component={OAMap} />
-            <Route exact path="/" component={TabBar} />
+            <Route
+              exact
+              path="/"
+              render={props => (
+                <TabBar
+                  {...props}
+                  titles={["新生学院", "个人中心"]}
+                  icons={[
+                    require("./assets/icon_home.svg"),
+                    require("./assets/icon_profile.svg")
+                  ]}
+                />
+              )}
+            />
             <Route path="/profile" component={TabBar} />
             <Route path="/signin" component={SignIn} />
             <Route path="/signup" component={SignUp} />

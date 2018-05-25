@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="oa-tabbar is-fixed"
+>
+  <a
+    aria-current="true"
+    className="oa-tab-item active"
+    href="/"
+    onClick={[Function]}
+    style={Object {}}
+  >
+    <div
+      className="oa-tab-item-icon"
+    >
+      <svg
+        className="am-icon am-icon-/assets/icon_home.svg am-icon-md "
+      >
+        <use
+          xlinkHref="./assets/icon_home.svg"
+        />
+         
+         
+      </svg>
+    </div>
+    <div
+      className="oa-tab-item-label"
+    >
+      新生学院
+    </div>
+  </a>
+  <a
+    aria-current={false}
+    className="oa-tab-item"
+    href="/profile"
+    onClick={[Function]}
+    style={undefined}
+  >
+    <div
+      className="oa-tab-item-icon"
+    >
+      <svg
+        className="am-icon am-icon-/assets/icon_profile.svg am-icon-md "
+      >
+        <use
+          xlinkHref="./assets/icon_profile.svg"
+        />
+         
+         
+      </svg>
+    </div>
+    <div
+      className="oa-tab-item-label"
+    >
+      个人中心
+    </div>
+  </a>
+</div>
+`;
