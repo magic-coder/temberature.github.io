@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="am-list-view-scrollview"
+>
+  <div
+    className="am-list-header"
+    style={
+      Object {
+        "position": false,
+        "top": 0,
+      }
+    }
+  >
+    <div>
+      header
+    </div>
+  </div>
+  <div
+    className="list-view-section-body"
+  >
+    <div>
+      row
+    </div>
+    <div>
+      separator
+    </div>
+  </div>
+  <div
+    className="am-list-footer"
+  >
+    <div>
+      footer
+    </div>
+  </div>
+</div>
+`;

@@ -18,7 +18,7 @@ class ListView extends React.Component {
   }
   componentDidMount() {
     const container = ReactDOM.findDOMNode(this.refs.container);
-    this.props.onInit(container && container.getBoundingClientRect().top);
+    this.props.onInit && this.props.onInit(container && container.getBoundingClientRect().top);
   }
   componentWillUnmount() {
     document.removeEventListener('scroll', this.loadMore);
