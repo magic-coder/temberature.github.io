@@ -65,7 +65,7 @@ class Home extends React.Component {
     }
     this.setState({
       isLoading: true,
-      dataSource: List(),
+      dataSource: List()
     });
     this.getCourses();
   }
@@ -238,19 +238,13 @@ class Home extends React.Component {
         </Carousel>
         <ListView
           dataSource={this.state.dataSource}
-          renderRow={this.row}
-          renderHeader={this.header}
-          renderSeparator={this.separator}
-          renderFooter={this.footer}
-          useBodyScroll
-          loadMore={this.loadMore}
-          onFix={this.onFix}
-          fixed={this.state.fixed}
-          onInit={fixedTop => {
-            this.setState({
-              fixedTop: fixedTop
-            });
-          }}
+          renderRow={item => <div key={item.get("course_id")}>row</div>}
+          renderHeader={() => <div>header</div>}
+          renderSeparator={item => (
+            <div key={item.get("course_id") * 2}>separator</div>
+          )}
+          renderFooter={() => <div>footer</div>}
+          onMore={this.loadMore}
         />
       </div>
     );

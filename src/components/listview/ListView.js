@@ -6,16 +6,19 @@ import Immutable from "immutable";
 import "./ListView.less";
 
 class ListView extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      items: [1, 2, 3],
-      fixed: false,
-      top: null,
-      locked: false
+      locked: false,
+      fixed: false
     };
     this.loadMoreTest = this.loadMoreTest.bind(this);
     this.fixTest = this.fixTest.bind(this);
+  }
+  UNSAFE_componentWillMount() {
+    if (this.props.onFix && !this.props.willFix) {
+      throw new Error("onFix will not fire when willFix is false");
+    }
     this.handleScroll();
   }
   componentDidMount() {
@@ -24,20 +27,27 @@ class ListView extends React.Component {
       this.props.onInit(container && container.getBoundingClientRect().top);
   }
   componentWillUnmount() {
-    document.removeEventListener("scroll", this.loadMoreTest);
-    document.removeEventListener("scroll", this.fixTest);
+    this.props.onMore && document.removeEventListener("scroll", this.loadMoreTest);
+    this.props.willFix && document.removeEventListener("scroll", this.fixTest);
   }
   handleScroll = () => {
-    document.addEventListener("scroll", this.loadMoreTest);
-    document.addEventListener("scroll", this.fixTest);
+    this.props.onMore && document.addEventListener("scroll", this.loadMoreTest);
+
+    this.props.willFix && document.addEventListener("scroll", this.fixTest);
   };
   fixTest() {
     const container = ReactDOM.findDOMNode(this.refs.container);
     let topTest = this.topTest(container);
     if (topTest.hitTop) {
-      this.props.onFix(true);
+      this.setState({
+        fixed: true
+      });
+      this.props.onFix && this.props.onFix(true);
     } else if (topTest.leaveTop) {
-      this.props.onFix(false);
+      this.setState({
+        fixed: false
+      });
+      this.props.onFix && this.props.onFix(false);
     }
   }
   loadMoreTest() {
@@ -46,25 +56,22 @@ class ListView extends React.Component {
     }
     const container = ReactDOM.findDOMNode(this.refs.container);
     var leave = this.leaveBottomTest(container);
-    // console.log(leave);
     if (leave) {
       this.setState({
         locked: true
       });
-      this.props.loadMore().then(() => {
-        this.setState({
-          locked: false
-        });
-      });
-      // this.setState(prev => {
-      //   var is = prev.items,
-      //     l = is.length;
-      //   for (var i = 0; i < l; i++) {
-      //     this.state.items[l + i] = is[i] + l;
-      //     console.log(this.state.items);
-      //   }
+      let more = this.props.onMore();
 
-      // });
+      if (!(more instanceof Promise)) {
+        throw new Error('onMore returnType should be Promise')
+      } else {
+        more.then(() => {
+          this.setState({
+            locked: false
+          });
+        });
+      }
+
     }
   }
   leaveBottomTest(elem) {
@@ -73,8 +80,6 @@ class ListView extends React.Component {
   }
   topTest(elem) {
     const top = elem && elem.getBoundingClientRect().top;
-    // console.log(top);
-
     let r = {
       hitTop: false,
       leaveTop: false
@@ -93,14 +98,14 @@ class ListView extends React.Component {
   }
   render() {
     return (
-      <div className="am-list-view-scrollview" ref="container">
+      <div className="oa-list-view-scrollview" ref="container">
         <div
-          className="am-list-header"
-          style={{ position: this.props.fixed && "fixed", top: 0 }}
+          className="oa-list-header"
+          style={{ position: this.state.fixed ? "fixed" : "", top: 0 }}
         >
           {this.props.renderHeader && this.props.renderHeader()}
         </div>
-        <div className="list-view-section-body">
+        <div className="oa-list-view-section-body">
           {this.props.dataSource.map(val => {
             return [
               this.props.renderRow(val),
@@ -108,7 +113,7 @@ class ListView extends React.Component {
             ];
           })}
         </div>
-        <div className="am-list-footer">
+        <div className="oa-list-footer">
           {this.props.renderFooter && this.props.renderFooter()}
         </div>
       </div>
@@ -125,6 +130,8 @@ ListView.propTypes = {
   renderHeader: PropTypes.func,
   renderFooter: PropTypes.func,
   renderSeparator: PropTypes.func,
-  fixed: PropTypes.bool,
+  willFix: PropTypes.bool,
+  onFix: PropTypes.func,
+  onMore: PropTypes.func
 };
 export default ListView;
