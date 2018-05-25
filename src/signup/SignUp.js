@@ -13,7 +13,7 @@ import "./SignUp.less";
 import axios from "../utils/customAxios";
 import jsSHA from "jssha";
 import WebConstants from "../web_constants";
-import Vericode from "../components/vericode/Vericode";
+import Countdown from "react-countdown-now";
 import classNames from "classnames/bind";
 
 class SignUp extends React.Component {
@@ -30,6 +30,7 @@ class SignUp extends React.Component {
       validationToken: "",
       modal: false,
       modalTip: "",
+      countdown: false
     };
     this.signup = this.signup.bind(this);
     this.sendCode = this.sendCode.bind(this);
@@ -117,12 +118,14 @@ class SignUp extends React.Component {
       code
     });
   };
-  sendCode (start) {
+  sendCode() {
     if (this.state.hasPhoneError) {
-      Toast.info('请输入正确手机号');
+      Toast.info("请输入正确手机号");
       return;
     }
-    start();
+    this.setState({
+      countdown: true
+    });
     this.setState({
       animating: true
     });
@@ -136,9 +139,9 @@ class SignUp extends React.Component {
         this.setState({
           animating: false
         });
-        if (response.data.get('validation_token')) {
+        if (response.data.get("validation_token")) {
           this.setState({
-            validationToken: response.data.get('validation_token')
+            validationToken: response.data.get("validation_token")
           });
           Toast.info("验证码发送成功～");
         } else {
@@ -148,7 +151,7 @@ class SignUp extends React.Component {
           });
         }
       });
-  };
+  }
   render() {
     return (
       <div id="signup">
@@ -172,7 +175,26 @@ class SignUp extends React.Component {
             onErrorClick={this.onErrorClick.bind(this, "Please enter 6 digits")}
             onChange={this.onCodeChange}
             value={this.state.code}
-            extra={<Vericode onClick={this.sendCode} />}
+            extra={
+              this.state.countdown ? (
+                <Countdown
+                  date={Date.now() + 10000}
+                  renderer={({ hours, minutes, seconds, completed }) => {
+                    if (!completed) {
+                      // Render a completed state
+                      return <span>{seconds}秒后重新发送</span>;
+                    }
+                  }}
+                  onComplete={() => {
+                    this.setState({
+                      countdown: false
+                    });
+                  }}
+                />
+              ) : (
+                <Button onClick={this.sendCode}>获取验证码</Button>
+              )
+            }
           />
           <InputItem
             type="password"
@@ -192,7 +214,7 @@ class SignUp extends React.Component {
               this.state.hasPhoneError ||
               this.state.hasCodeError ||
               this.state.hasPasswordError ||
-              this.state.validationToken === ''
+              this.state.validationToken === ""
           })}
           size="large"
         >
