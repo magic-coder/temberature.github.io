@@ -46,6 +46,18 @@ class App extends React.Component {
       currentCourse: id
     });
   }
+  OATab(props) {
+    return (
+      <TabBar
+        {...props}
+        titles={["新生学院", "个人中心"]}
+        icons={[
+          require("./assets/icon_home.svg"),
+          require("./assets/icon_profile.svg")
+        ]}
+      />
+    );
+  }
   render() {
     return (
       <Router>
@@ -75,21 +87,8 @@ class App extends React.Component {
             />
             <Route exact path="/course/:id/entryForm" component={EntryForm} />
             <Route exact path="/course/:id/map" component={OAMap} />
-            <Route
-              exact
-              path="/"
-              render={props => (
-                <TabBar
-                  {...props}
-                  titles={["新生学院", "个人中心"]}
-                  icons={[
-                    require("./assets/icon_home.svg"),
-                    require("./assets/icon_profile.svg")
-                  ]}
-                />
-              )}
-            />
-            <Route path="/profile" component={TabBar} />
+            <Route exact path="/" render={props => this.OATab(props)} />
+            <Route path="/profile" render={props => this.OATab(props)} />
             <Route path="/signin" component={SignIn} />
             <Route path="/signup" component={SignUp} />
             <Route
