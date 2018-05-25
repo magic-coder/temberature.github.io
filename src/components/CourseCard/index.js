@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Moment from "moment";
 import Period from "../period/Period";
-import './index.less';
+import "./index.less";
 
 function row(course) {
   return (
@@ -23,9 +23,8 @@ function row(course) {
         <div className="name">{course.get("title")}</div>
         <div className="time">
           <label htmlFor="">时间：</label>
-          {Moment(course.get("event_start_date")).format(
-            "YYYY/MM/DD"
-          )} ～ {Moment(course.get("event_end_date")).format("YYYY/MM/DD")}
+          {Moment(course.get("event_start_date")).format("YYYY/MM/DD")} ～{" "}
+          {Moment(course.get("event_end_date")).format("YYYY/MM/DD")}
         </div>
         <div className="address">
           <label htmlFor="">地点：</label>
@@ -38,6 +37,11 @@ function row(course) {
         <div className="period">
           <Period
             course={course}
+            images={[
+              require("./assets/period_enrolling.png"),
+              require("./assets/period_ongoing.png"),
+              require("./assets/period_finish.png")
+            ]}
           />
         </div>
       </div>
