@@ -4,11 +4,9 @@ import { Carousel } from "antd-mobile";
 import ListView from "../components/listview/ListView";
 import axios from "../utils/customAxios";
 import "./Home.less";
-import { Link } from "react-router-dom";
-import Moment from "moment";
-import Period from "../components/period/Period";
 import classNames from "classnames/bind";
 import { List, is } from "immutable";
+import CourseCard from '../components/CourseCard';
 
 class Home extends React.Component {
   constructor(props) {
@@ -108,51 +106,7 @@ class Home extends React.Component {
   onChange(type) {
     this.props.onChange(type);
   }
-  row(course) {
-    return (
-      <Link
-        to={"/course/" + course.get("course_id")}
-        key={course.get("course_id")}
-        className="course"
-      >
-        <img
-          className="cover"
-          src={
-            "https://www.jieshu.mobi:8181" +
-            course.get("event_frontcover_filepath")
-          }
-          alt=""
-        />
-        <div className="info">
-          <div className="name">{course.get("title")}</div>
-          <div className="time">
-            <label htmlFor="">时间：</label>
-            {Moment(course.get("event_start_date")).format(
-              "YYYY/MM/DD"
-            )} ～ {Moment(course.get("event_end_date")).format("YYYY/MM/DD")}
-          </div>
-          <div className="address">
-            <label htmlFor="">地点：</label>
-            {course.get("address")}
-          </div>
-          <div className="quota">
-            <label htmlFor="">人数：</label>
-            限{course.get("max_attendence")}人
-          </div>
-          <div className="period">
-            <Period
-              course={course}
-              images={[
-                require("./assets/period_enrolling.png"),
-                require("./assets/period_ongoing.png"),
-                require("./assets/period_finish.png")
-              ]}
-            />
-          </div>
-        </div>
-      </Link>
-    );
-  }
+
   header() {
     return (
       <header className="tabs">
@@ -238,7 +192,7 @@ class Home extends React.Component {
         </Carousel>
         <ListView
           dataSource={this.state.dataSource}
-          renderRow={this.row}
+          renderRow={CourseCard}
           renderHeader={this.header}
           renderSeparator={this.separator}
           renderFooter={this.footer}

@@ -8,6 +8,7 @@ import Moment from "moment";
 import Period from "../components/period/Period";
 import { List, is } from "immutable";
 import WebConstants from "../web_constants";
+import CourseCard from '../components/CourseCard';
 
 class Home extends React.Component {
   constructor(props) {
@@ -221,19 +222,9 @@ class Home extends React.Component {
       <div id="mycourses">
         <ListView
           dataSource={this.state.dataSource}
-          renderRow={this.row}
+          renderRow={CourseCard}
           renderHeader={this.header}
           renderSeparator={this.separator}
-          renderFooter={this.footer}
-          useBodyScroll
-          loadMore={this.loadMore}
-          onFix={this.onFix}
-          fixed={this.state.fixed}
-          onInit={fixedTop => {
-            this.setState({
-              fixedTop: fixedTop
-            });
-          }}
         />
       </div>
     );

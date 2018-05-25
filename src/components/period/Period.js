@@ -2,7 +2,12 @@ import React from "react";
 
 export default class Period extends React.Component {
   render() {
-    const { course, images } = this.props;
+    const { course } = this.props;
+    const images = [
+      require("./assets/period_enrolling.png"),
+      require("./assets/period_ongoing.png"),
+      require("./assets/period_finish.png")
+    ];
     if (!course || !images) {
       return null;
     }
