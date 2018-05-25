@@ -11,21 +11,21 @@ class ListView extends React.Component {
       top: null,
       locked: false
     };
-    this.loadMore = this.loadMore.bind(this);
+    this.loadMoreTest = this.loadMoreTest.bind(this);
     this.fixTest = this.fixTest.bind(this);
     this.handleScroll();
-
   }
   componentDidMount() {
     const container = ReactDOM.findDOMNode(this.refs.container);
-    this.props.onInit && this.props.onInit(container && container.getBoundingClientRect().top);
+    this.props.onInit &&
+      this.props.onInit(container && container.getBoundingClientRect().top);
   }
   componentWillUnmount() {
-    document.removeEventListener('scroll', this.loadMore);
+    document.removeEventListener("scroll", this.loadMoreTest);
     document.removeEventListener("scroll", this.fixTest);
   }
   handleScroll = () => {
-    document.addEventListener("scroll", this.loadMore);
+    document.addEventListener("scroll", this.loadMoreTest);
     document.addEventListener("scroll", this.fixTest);
   };
   fixTest() {
@@ -37,7 +37,7 @@ class ListView extends React.Component {
       this.props.onFix(false);
     }
   }
-  loadMore() {
+  loadMoreTest() {
     if (this.state.locked) {
       return;
     }
@@ -95,14 +95,19 @@ class ListView extends React.Component {
           className="am-list-header"
           style={{ position: this.props.fixed && "fixed", top: 0 }}
         >
-          {this.props.renderHeader()}
+          {this.props.renderHeader() && this.props.renderHeader()}
         </div>
         <div className="list-view-section-body">
           {this.props.dataSource.map(val => {
-            return [this.props.renderRow(val), this.props.renderSeparator(val)];
+            return [
+              this.props.renderRow(val),
+              this.props.renderSeparator && this.props.renderSeparator(val)
+            ];
           })}
         </div>
-        <div className="am-list-footer">{this.props.renderFooter()}</div>
+        <div className="am-list-footer">
+          {this.props.renderFooter() && this.props.renderFooter()}
+        </div>
       </div>
     );
   }
