@@ -65,7 +65,7 @@ class Home extends React.Component {
     }
     this.setState({
       isLoading: true,
-      dataSource: []
+      dataSource: List(),
     });
     this.getCourses();
   }

@@ -26,7 +26,6 @@ it("renders correctly", function() {
       renderHeader={() => <div>header</div>}
       renderSeparator={(item) => <div key={item.course_id * 2}>separator</div>}
       renderFooter={() => <div>footer</div>}
-      useBodyScroll
       fixed={false}
     />
     )

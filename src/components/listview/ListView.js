@@ -1,6 +1,9 @@
 import React from "react";
-import "./ListView.less";
 import ReactDOM from "react-dom";
+import PropTypes from "prop-types";
+import Immutable from "immutable";
+
+import "./ListView.less";
 
 class ListView extends React.Component {
   constructor() {
@@ -95,7 +98,7 @@ class ListView extends React.Component {
           className="am-list-header"
           style={{ position: this.props.fixed && "fixed", top: 0 }}
         >
-          {this.props.renderHeader() && this.props.renderHeader()}
+          {this.props.renderHeader && this.props.renderHeader()}
         </div>
         <div className="list-view-section-body">
           {this.props.dataSource.map(val => {
@@ -106,10 +109,22 @@ class ListView extends React.Component {
           })}
         </div>
         <div className="am-list-footer">
-          {this.props.renderFooter() && this.props.renderFooter()}
+          {this.props.renderFooter && this.props.renderFooter()}
         </div>
       </div>
     );
   }
 }
+
+ListView.propTypes = {
+  dataSource: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.object),
+    PropTypes.instanceOf(Immutable.List)
+  ]).isRequired,
+  renderRow: PropTypes.func.isRequired,
+  renderHeader: PropTypes.func,
+  renderFooter: PropTypes.func,
+  renderSeparator: PropTypes.func,
+  fixed: PropTypes.bool,
+};
 export default ListView;
