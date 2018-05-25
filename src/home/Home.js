@@ -238,13 +238,18 @@ class Home extends React.Component {
         </Carousel>
         <ListView
           dataSource={this.state.dataSource}
-          renderRow={item => <div key={item.get("course_id")}>row</div>}
-          renderHeader={() => <div>header</div>}
-          renderSeparator={item => (
-            <div key={item.get("course_id") * 2}>separator</div>
-          )}
-          renderFooter={() => <div>footer</div>}
+          renderRow={this.row}
+          renderHeader={this.header}
+          renderSeparator={this.separator}
+          renderFooter={this.footer}
           onMore={this.loadMore}
+          onFix={this.onFix}
+          willFix={true}
+          onInit={fixedTop => {
+            this.setState({
+              fixedTop: fixedTop
+            });
+          }}
         />
       </div>
     );
