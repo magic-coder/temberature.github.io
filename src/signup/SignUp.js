@@ -13,7 +13,7 @@ import "./SignUp.less";
 import axios from "../utils/customAxios";
 import jsSHA from "jssha";
 import WebConstants from "../web_constants";
-import VeriCode from "../components/vericode/vericode";
+import Vericode from "../components/vericode/Vericode";
 import classNames from "classnames/bind";
 
 class SignUp extends React.Component {
@@ -172,7 +172,7 @@ class SignUp extends React.Component {
             onErrorClick={this.onErrorClick.bind(this, "Please enter 6 digits")}
             onChange={this.onCodeChange}
             value={this.state.code}
-            extra={<VeriCode onClick={this.sendCode} />}
+            extra={<Vericode onClick={this.sendCode} />}
           />
           <InputItem
             type="password"

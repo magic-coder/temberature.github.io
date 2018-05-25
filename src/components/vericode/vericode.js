@@ -3,7 +3,7 @@ import { Button } from "antd-mobile";
 import classNames from "classnames/bind";
 import Countdown from "../../utils/Countdown";
 
-class VeriCode extends React.Component {
+class Vericode extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,4 +44,4 @@ class VeriCode extends React.Component {
   }
 }
 
-export default VeriCode;
+export default Vericode;
